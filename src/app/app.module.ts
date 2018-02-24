@@ -1,4 +1,5 @@
 
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,21 +11,24 @@ import { TodoModule } from './todo/todo.module';
 // import { ManualModule } from './manual/manual.module';
 
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
+import { LoginModule } from './login/login.module';
+// import { LoginComponent } from './login/login.component';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    // LoginComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    // FormsModule,
     HttpModule,
     AppRoutingModule,
     CoreModule,
     TodoModule,
+    LoginModule
     // ManualModule
   ],
   bootstrap: [AppComponent]

@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     this.service
       .loginWithCredentials(formValue.login.username, formValue.login.password)
       .then(auth => {
-        let redirectUrl = (auth.redirectUrl === null) ? '/todo' : auth.redirectUrl;
+        const redirectUrl = (auth.redirectUrl === null) ? '/todo' : auth.redirectUrl;
         if (!auth.hasError) {
           this.router.navigate([redirectUrl]);
           localStorage.removeItem('redirectUrl');
