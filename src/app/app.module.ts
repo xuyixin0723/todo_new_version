@@ -8,28 +8,27 @@ import { HttpModule } from '@angular/http';
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { TodoModule } from './todo/todo.module';
-// import { ManualModule } from './manual/manual.module';
 
 import { AppComponent } from './app.component';
 import { LoginModule } from './login/login.module';
-// import { LoginComponent } from './login/login.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // 没有这个动画，下拉菜单下不来
+import { MaterialModule } from './material/material.module';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    // LoginComponent
   ],
   imports: [
     BrowserModule,
-    // FormsModule,
     HttpModule,
     AppRoutingModule,
     CoreModule,
     TodoModule,
-    LoginModule
-    // ManualModule
+    LoginModule,
+    BrowserAnimationsModule, // 没有这个动画，下拉菜单下不来
+    MaterialModule
   ],
   bootstrap: [AppComponent]
 })

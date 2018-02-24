@@ -15,9 +15,9 @@ export class AuthService {
     return this.userService
       .findUser(username)
       .then(user => {
-        let auth = new Auth();
+        const auth = new Auth();
         localStorage.removeItem('userId');
-        let redirectUrl = (localStorage.getItem('redirectUrl') === null) ?
+        const redirectUrl = (localStorage.getItem('redirectUrl') === null) ?
           '/todo' : localStorage.getItem('redirectUrl');
         auth.redirectUrl = redirectUrl;
         if (null === user) {

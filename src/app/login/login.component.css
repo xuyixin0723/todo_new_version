@@ -1,6 +1,18 @@
 input.ng-invalid{
-  border: 3px solid red;
+  /* border: 3px solid red; */
+  color: red;
 }
-input.ng-valid{
+/* input.ng-valid{
   border: 3px solid green;
+} */
+
+.example-form {
+  margin: 30px;
+  min-width: 150px;
+  max-width: 300px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
 }

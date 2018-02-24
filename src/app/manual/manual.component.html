@@ -1,35 +1,24 @@
-<body item-width="1000">
-  <header>
-    <img id="headerlogo"
-         src="../../assets/128.ico"
-         alt="Sci-Jet logo">
-    <label id="headerlabel">像景3D AOI Manual</label>
-  </header>
+<div>
+  <mat-sidenav-container class="example-container">
+    <mat-sidenav class="left-sidenav"
+                 mode="side"
+                 opened>
+      <ul>
+        <li>
+          <a routerLink="operation">Operation</a>
+        </li>
+        <li>
+          <a routerLink="maintenance">Maintenance</a>
+        </li>
+        <li>
+          <a routerLink="spc">SPC</a>
+        </li>
 
-  <section id="sidebar">
-    <ul>
-      <li>
-        <a routerLink="operation">Operation</a>
-      </li>
-      <li>
-        <a routerLink="maintenance">Maintenance</a>
-      </li>
-      <li>
-        <a routerLink="spc">SPC</a>
-      </li>
+      </ul>
 
-    </ul>
-  </section>
-
-  <aside>
-    <router-outlet></router-outlet>
-  </aside>
-
-
-  <footer>
-    @copyright 2018， SciJet Corp
-    <br> All trademarks and rgitstered trademarks appearing on this site are the property
-    of their respective owners
-  </footer>
-
-</body>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

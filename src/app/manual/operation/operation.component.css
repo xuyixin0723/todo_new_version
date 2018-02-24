@@ -1,18 +1,3 @@
-section#main{
-    display: table-cell;
-    background-color: #90a4ae;
-    font-size: 105%;
-    padding: 15px;
-    vertical-align: top;
- 
-}
-
-aside{
-    display: table-cell;
-    background: #efe5d0;
-    font-size:105%;
-    padding: 15px;
-    vertical-align:top;
-    width: 30%;
-
+.right-sidenav{
+    width:20%;
 }

@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit(formValue) {
     this.service
-      .loginWithCredentials(formValue.login.username, formValue.login.password)
+      .loginWithCredentials(this.username, this.password) // 之前是formValue.login.username的写法，现在改回this.username, 这是为了美观的代价
       .then(auth => {
         const redirectUrl = (auth.redirectUrl === null) ? '/todo' : auth.redirectUrl;
         if (!auth.hasError) {

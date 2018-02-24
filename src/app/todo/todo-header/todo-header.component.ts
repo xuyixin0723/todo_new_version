@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -10,13 +10,13 @@ import 'rxjs/add/operator/distinctUntilChanged';
   styleUrls: ['./todo-header.component.css']
 })
 export class TodoHeaderComponent {
-  inputValue: string = '';
-  @Input() placeholder: string = 'What needs to be done?';
-  @Input() delay: number = 300;
+  inputValue = '';
+  @Input() placeholder = 'What needs to be done?';
+  @Input() delay = 300;
 
-  //detect the input value and output this to parent
+  // detect the input value and output this to parent
   @Output() textChanges = new EventEmitter<string>();
-  //detect the enter keyup event and output this to parent
+  // detect the enter keyup event and output this to parent
   @Output() onEnterUp = new EventEmitter<boolean>();
 
   constructor(private elementRef: ElementRef) {
@@ -26,7 +26,7 @@ export class TodoHeaderComponent {
       .distinctUntilChanged();
     event$.subscribe(input => this.textChanges.emit(input));
   }
-  enterUp(){
+  enterUp() {
     this.onEnterUp.emit(true);
     this.inputValue = '';
   }

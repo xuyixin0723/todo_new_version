@@ -1,0 +1,16 @@
+.example-logo {
+  padding: 0 15px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+footer{
+    background: #3f51b5;
+    color: #efe5d0;
+    text-align: center;
+    padding: 15px;
+    /* margin: 0px 10px 10px 10px; */
+    font-size: 90%;
+}

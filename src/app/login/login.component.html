@@ -1,24 +1,33 @@
 <div>
-  <form #formRef="ngForm" (ngSubmit)="onSubmit(formRef.value)">
-    <fieldset ngModelGroup="login">
-      <input
-        name="username"
-        type="text"
-        [(ngModel)]="username"
-        #usernameRef="ngModel"
-        required
-        minlength="3">
-        <div *ngIf="usernameRef.errors?.required">this is required</div>
-        <div *ngIf="usernameRef.errors?.minlength">should be at least 3 charactors</div>
-        <div *ngIf="auth?.hasError">{{auth.errMsg}}</div>
-      <input
-        name="password"
-        type="password"
-        [(ngModel)]="password"
-        #passwordRef="ngModel"
-        required>
-        <div *ngIf="passwordRef.errors?.required">this is required</div>
-    </fieldset>
-    <button type="submit">Login</button>
+  <form #formRef="ngForm"
+        class="example-form"
+        (ngSubmit)="onSubmit()">
+    <mat-form-field class="example-full-width">
+      <input matInput
+             placeholder="username"
+             name="username"
+             type="text"
+             [(ngModel)]="username"
+             #usernameRef="ngModel"
+             required
+             minlength="3">
+      <div *ngIf="usernameRef.errors?.required">this is required</div>
+      <div *ngIf="usernameRef.errors?.minlength">should be at least 3 charactors</div>
+      <div *ngIf="auth?.hasError">{{auth.errMsg}}</div>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput
+             placeholder="password"
+             name="password"
+             type="password"
+             [(ngModel)]="password"
+             #passwordRef="ngModel"
+             required>
+      <div *ngIf="passwordRef.errors?.required">this is required</div>
+    </mat-form-field>
+    <button mat-raised-button
+            color="primary"
+            type="submit">Login</button>
   </form>
 </div>
