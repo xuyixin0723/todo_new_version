@@ -1,4 +1,5 @@
-<mat-toolbar color='primary'>
+<mat-toolbar color='primary'
+             [class.mat-elevation-z8]="isActive">
     <button mat-icon-button
             [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
