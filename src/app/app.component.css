@@ -1,16 +1,60 @@
-.example-logo {
-  padding: 0 15px;
+.example-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.example-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+}
+
+.example-sidenav-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+}
+
+footer {
+  background: #3f51b5;
+  color: whitesmoke;
+  text-align: center;
+  padding: 15px;
+  /* margin: 0px 10px 10px 10px; */
+  font-size: 90%;
+  flex: 0 0 auto;
+}
+
+img.example-logo {
+  flex: 0 0 auto;
+  position: relative;
+  left: -10px;
+}
+
+h1.example-app-name {
+  position: relative;
+  top: 10px;
+  left: -40px;
 }
 
 .example-spacer {
-  flex: 1 1 auto;
+  flex: 1 1;
 }
 
-footer{
-    background: #3f51b5;
-    color: #efe5d0;
-    text-align: center;
-    padding: 15px;
-    /* margin: 0px 10px 10px 10px; */
-    font-size: 90%;
+.grid-container {
+  display: grid;
+  grid-template-columns: 100px 100px 100px;
+  flex: 0 0 auto;
+  position: relative;
+  top: 10px;
+}
+
+.item {
+  text-align: center;
+  font-size: 15px;
 }

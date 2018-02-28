@@ -7,6 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  isActive = true;
-  // title = 'This is a hello-angular app!';
+  fillerNav = Array(5).fill(0).map((_, i) => `Nav Item ${i + 1}`);
 }

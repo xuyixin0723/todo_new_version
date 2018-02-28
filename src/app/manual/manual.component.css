@@ -5,25 +5,18 @@
     margin:0px;
 } */
 
-.example-container {
-  /* position: absolute; */
-  /* top: 5px;
+/* .example-container {
+  position: absolute; 
+  top: 5px;
   bottom: -5px;
   left: 5px;
-  right: 5px; */
+  right: 5px; 
 
-}
+} */
 
-.left-sidenav{
+.left-sidenav {
     position: relative;
     width: 15%;
     top: 75px;
     bottom: 85px;
 }
-
-
-
-
-
-
-
