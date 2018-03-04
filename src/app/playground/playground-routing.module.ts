@@ -1,3 +1,4 @@
+import { AuthGuardService } from './../core/auth-guard.service';
 import { OneComponent } from './one/one.component';
 import { TwoComponent } from './two/two.component';
 import { ThreeComponent } from './three/three.component';
@@ -9,6 +10,7 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
     {
         path: '',
+        canActivate: [AuthGuardService],
         component: PlaygroundComponent,
         children: [
             {

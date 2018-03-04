@@ -1,43 +1,67 @@
+
 import { UserService } from './user.service';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
 import { Auth } from '../domain/entities';
 
 @Injectable()
 export class AuthService {
+  // 作者代码没有user:null, 这种情况tslint是不接受的
+  // 本来考虑过auth为static来实现浏览器输入路由不带#导致要重新进入app.component.ts中ngOnInit函数带来的用户验证失效问题，
+  // 但发现这行为导致的是整个app重新载入，也就是从服务器重新下载重构，因此包括注入的全局服务等都是会跟着重构
+  // 这就意味着AuthService也是作为新的进程重新创建一遍，
+  // 因此就算是静态变量也是相当于重新初始化了
+  // 如果要防用户在浏览器地址栏#前输入路由不需要也随之重新验证一遍的话
+  // 还是要考虑利用localStorage
+  auth: Auth = { user: null, hasError: true, redirectUrl: '', errMsg: 'not logged in' };
 
-  constructor(private http: Http, private userService: UserService) { }
+  subject: ReplaySubject<Auth> = new ReplaySubject<Auth>(1);
 
-  loginWithCredentials(username: string, password: string): Promise<Auth> {
+  constructor(private http: Http, private userService: UserService) {
+    this.subject.next(this.auth); // 必须要考虑到没有login直接在浏览器输入其它路由的情况，如果这里没有就会导致无法获得auth
+  }
+
+  getAuth(): Observable<Auth> {
+    return this.subject.asObservable();
+  }
+  unAuth(): void {
+
+    this.auth = Object.assign(// Object.assign是深复制，前端开发提倡函数式编程【正好提一下以前平进平出的概念】，所以不提倡数据修改，而是提倡新建修改好的一整套数据
+      {},
+      this.auth,
+      { user: null, hasError: true, redirectUrl: '', errMsg: 'not logged in' });
+    this.subject.next(this.auth);
+  }
+
+  loginWithCredentials(username: string, password: string): Observable<Auth> {
     return this.userService
       .findUser(username)
-      .then(user => {
+      .map(user => {
         const auth = new Auth();
-        localStorage.removeItem('userId');
-        const redirectUrl = (localStorage.getItem('redirectUrl') === null) ?
-          '/todo' : localStorage.getItem('redirectUrl');
-        auth.redirectUrl = redirectUrl;
         if (null === user) {
+          auth.user = null;
           auth.hasError = true;
           auth.errMsg = 'user not found';
         } else if (password === user.password) {
-          auth.user = Object.assign({}, user);
+          auth.user = user;
           auth.hasError = false;
-          localStorage.setItem('userId', user.id.toString());
+          auth.errMsg = null;
         } else {
+          auth.user = null;
           auth.hasError = true;
           auth.errMsg = 'password not match';
         }
 
-        return auth;
-      })
-      .catch(this.handleError);
+        this.auth = Object.assign({}, auth);
+        this.subject.next(this.auth); // 作为observer触发， 该subject是ReplaySubject类型，所以能够在subscribe时得到最近值
+        return this.auth;
+
+      }); // 这里也取消了异常处理
   }
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
-  }
+
 }

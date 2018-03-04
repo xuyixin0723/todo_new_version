@@ -11,9 +11,24 @@
         <h1 class="example-app-name">Shanghai Sci-Jet AI Tech Corporation</h1>
         <span class="example-spacer"></span>
         <div class="grid-container">
-            <div class="item">todos</div>
-            <div class="item">wang</div>
-            <div class="item">login</div>
+            <nav class="item"
+                 *ngIf="auth?.user?.username !== null">
+                <a routerLink="todo">Todos</a>
+                <!-- 上面直接用todo是不行的，可见todo独立后直接进入todo模块路由了，所以需要给filter -->
+            </nav>
+            <nav class="item"
+                 *ngIf="auth?.user?.username !== null">
+                <a routerLink="profile">{{auth.user.username}}</a>
+            </nav>
+            <nav class="item">
+                <a *ngIf="auth?.user?.username === null"
+                   (click)="login()">
+                    Login
+                </a>
+                <a *ngIf="auth?.user?.username !== null"
+                   (click)="logout()"> Logout
+                </a>
+            </nav>
         </div>
     </mat-toolbar>
 
@@ -38,41 +53,3 @@
     </footer>
 
 </div>
-
-
-
-
-
-
-
-
-
-<!-- <mat-toolbar color='primary'
-             [class.mat-elevation-z18]="isActive">
-    <button mat-icon-button
-            [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item>
-            <mat-icon>dialpad</mat-icon>
-            <span>Redial</span>
-        </button>
-        <button mat-menu-item
-                disabled>
-            <mat-icon>voicemail</mat-icon>
-            <span>Check voicemail</span>
-        </button>
-        <button mat-menu-item>
-            <mat-icon>notifications_off</mat-icon>
-            <span>Disable alerts</span>
-        </button>
-    </mat-menu>
-    <span class="example-spacer"></span>
-    <img class="example-logo"
-         id="headerlogo"
-         src="../../assets/128.ico"
-         alt="Sci-Jet logo">
-</mat-toolbar> -->
-
-<!-- <router-outlet></router-outlet> -->

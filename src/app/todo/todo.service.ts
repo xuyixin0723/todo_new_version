@@ -1,3 +1,4 @@
+import { AuthService } from './../core/auth.service';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { UUID } from 'angular2-uuid';
@@ -11,9 +12,17 @@ export class TodoService {
 
   private api_url = 'http://localhost:3000/todos';
   private headers = new Headers({ 'Content-Type': 'application/json' });
+  private userId: number; // 为配合使用auth替代localStorage时用户筛选仍然有效而新增
 
-
-  constructor(private http: Http) { }
+  constructor(private http: Http, private authService: AuthService) {
+    // 作者在chap06仍未将用户真正实现，所以作者代码会显示所有用户的待办事项
+    // 而如果基于我们自己写得chap05，那么用户信息因为作者改用auth在内存中的实现替代localStorage
+    // 这意味着只要用户关闭页面就意味着要重新登录，但是这也意味着userId始终为0，无法正常显示每个用户的待办事项
+    // 所以如下修改是本章书本中代码没有自行补充的
+    this.authService.getAuth()
+      .filter(auth => auth.user != null)
+      .subscribe(auth => this.userId = auth.user.id); // 异常处理可以改到此处来
+  }
   // POST /todos
   addTodo(desc: string): Promise<Todo> {
     // “+”是一个简易方法可以把string转成number
@@ -23,7 +32,7 @@ export class TodoService {
       id: UUID.UUID(),
       desc: desc,
       completed: false,
-      userId
+      userId: this.userId
     };
     return this.http
       .post(this.api_url, JSON.stringify(todo), { headers: this.headers })
@@ -54,8 +63,10 @@ export class TodoService {
   }
   // GET /todos
   getTodos(): Promise<Todo[]> {
-    const userId = +localStorage.getItem('userId');
-    const url = `${this.api_url}/?userId=${userId}`;
+    // 作者截止到chap06未做修改实现用户筛选，同时将storage改用内存保存用户信息
+    // 从嗯个人导致进入显示内容有误 令人发指为在本章实现用户筛选必须注销下面这句，并使用新增的this.userId成员变量
+    // const userId = +localStorage.getItem('userId');
+    const url = `${this.api_url}/?userId=${this.userId}`;
     return this.http.get(url)
       .toPromise()
       .then(res => res.json() as Todo[])
@@ -63,16 +74,16 @@ export class TodoService {
   }
   // GET /todos?completed=true/false
   filterTodos(filter: string): Promise<Todo[]> {
-    const userId: number = +localStorage.getItem('userId');
-    const url = `${this.api_url}/?userId=${userId}`;
+    // const userId: number = +localStorage.getItem('userId');
+    const url = `${this.api_url}/?userId=${this.userId}`;
     switch (filter) {
       case 'ACTIVE': return this.http
-        .get(`${url}?completed=false`)
+        .get(`${url}&completed=false`)
         .toPromise()
         .then(res => res.json() as Todo[])
         .catch(this.handleError);
       case 'COMPLETED': return this.http
-        .get(`${url}?completed=true`)
+        .get(`${url}&completed=true`)
         .toPromise()
         .then(res => res.json() as Todo[])
         .catch(this.handleError);

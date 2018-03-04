@@ -1,8 +1,11 @@
+import { Observable } from 'rxjs/Observable'; // 作者导入了rxjs/Rx，可以恢复演示一下tslint提示
 import { Injectable } from '@angular/core';
 
 import { Http, Headers, Response } from '@angular/http';
 
-import 'rxjs/add/operator/toPromise';
+// import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/map';
+
 import { User } from '../domain/entities';
 
 @Injectable()
@@ -12,18 +15,20 @@ export class UserService {
 
   constructor(private http: Http) { }
 
-  findUser(username: string): Promise<User> {
+  getUser(userId: number): Observable<User> {
+    const url = `${this.api_url}/${userId}`;
+    return this.http.get(url)
+      .map(res => res.json() as User);
+  }
+  findUser(username: string): Observable<User> {
     const url = `${this.api_url}/?username=${username}`;
     return this.http.get(url)
-      .toPromise()
-      .then(res => {
-        let users = res.json() as User[];
+      .map(res => {
+        const users = res.json() as User[];
         return (users.length > 0) ? users[0] : null;
-      })
-      .catch(this.handleError);
+      });
   }
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
-  }
+  // 这里把原先的异常的处理的函数删除了
+  // 主要是因为Rxjs处理异常的默认位置应该是在subscribe处
+  // 作者没有写 记得结合教材特别交代一下应该写在哪里
 }

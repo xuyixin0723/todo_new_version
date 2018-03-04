@@ -24,14 +24,12 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.service
       .loginWithCredentials(this.username, this.password) // 之前是formValue.login.username的写法，现在改回this.username, 这是为了美观的代价
-      .then(auth => {
-        const redirectUrl = (auth.redirectUrl === null) ? '/todo' : auth.redirectUrl;
+      .subscribe(auth => {
+        this.auth = Object.assign({}, auth);
         if (!auth.hasError) {
-          this.router.navigate([redirectUrl]);
-          localStorage.removeItem('redirectUrl');
-        } else {
-          this.auth = Object.assign({}, auth);
-        }
+          // this.router.navigate(['todo']);
+          this.router.navigate(['/todo']);
+        } // 异常处理应该写在这里，只是作者没有写
       });
   }
 

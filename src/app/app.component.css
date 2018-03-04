@@ -58,3 +58,10 @@ h1.example-app-name {
   text-align: center;
   font-size: 15px;
 }
+
+.item a {
+  color: inherit;
+  margin: 3px;
+  padding: 3px 7px;
+  text-decoration: none;
+}

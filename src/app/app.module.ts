@@ -1,3 +1,4 @@
+// import { PlaygroundModule } from './playground/playground.module';
 
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -16,6 +17,7 @@ import { MaterialModule } from './material/material.module';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +28,7 @@ import { MaterialModule } from './material/material.module';
     AppRoutingModule,
     CoreModule,
     TodoModule,
+    // PlaygroundModule,
     LoginModule,
     BrowserAnimationsModule, // 没有这个动画，下拉菜单下不来
     MaterialModule

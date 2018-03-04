@@ -9,13 +9,13 @@
     {
       "id": "5894a12f-dae1-5ab0-5761-1371ba4f703e",
       "desc": "userId:2 @have breakfast",
-      "completed": true,
+      "completed": false,
       "userId": 2
     },
     {
       "id": "0d2596c4-216b-df3d-1608-633899c5a549",
       "desc": "userId:1 @go to school",
-      "completed": true,
+      "completed": false,
       "userId": 1
     },
     {
