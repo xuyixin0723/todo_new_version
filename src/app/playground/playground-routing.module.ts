@@ -10,7 +10,7 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
     {
         path: '',
-        canActivate: [AuthGuardService],
+        // canActivate: [AuthGuardService], // 为了第7章展示方便，取消playground的路由守卫
         component: PlaygroundComponent,
         children: [
             {

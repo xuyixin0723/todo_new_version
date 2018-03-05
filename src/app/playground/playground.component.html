@@ -10,6 +10,24 @@
     <a routerLink="two">Two</a>
   </li>
 </ul>
-
-
 <router-outlet></router-outlet>
+
+
+<div class="traffic-light"></div>
+
+<!-- 这里绑定的是state -->
+<div [@signal]="'go'"
+     class="traffic-light"></div>
+
+<!--  直接双引号是类绑定成员变量, 然后通过成员变量的state赋值来实现动画效果 -->
+<div [@signal]="stat1"
+     class="traffic-light"></div>
+
+<button (click)="onGo()">Go</button>
+<button (click)="onStop()">Stop</button>
+
+<div [@signal]="stat2"
+     class="traffic-light"></div>
+
+<button (click)="onStart()">Start</button>
+<button (click)="onEnd()">End</button>

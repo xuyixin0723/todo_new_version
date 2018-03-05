@@ -28,6 +28,9 @@
     </mat-form-field>
     <button mat-raised-button
             color="primary"
-            type="submit">Login</button>
+            type="submit"
+            [@loginState]="loginBtnState"
+            (mouseenter)="toggleLoginState(true)"
+            (mouseleave)="toggleLoginState(false)">Login</button>
   </form>
 </div>
