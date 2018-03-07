@@ -7,6 +7,9 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
 import { Auth } from '../domain/entities';
 
 @Injectable()
@@ -36,6 +39,27 @@ export class AuthService {
       this.auth,
       { user: null, hasError: true, redirectUrl: '', errMsg: 'not logged in' });
     this.subject.next(this.auth);
+  }
+
+  register(username: string, password: string): Observable<Auth> {
+    const toAddUser = {
+      id: null, // json-server 会自增长id的
+      username: username,
+      password: password
+    };
+    return this.userService
+      .findUser(username)
+      .filter(user => user === null)
+      .switchMap(user => {
+        return this.userService.addUser(toAddUser).map(u => {
+          this.auth = Object.assign(
+            {},
+            { user: u, hasError: false, errMsg: null, redirectUrl: '' } // 作者写null是不应该，应该自动转到根路由
+          );
+          this.subject.next(this.auth);
+          return this.auth;
+        });
+      });
   }
 
   loginWithCredentials(username: string, password: string): Observable<Auth> {

@@ -1,3 +1,4 @@
+
 import { AuthService } from './../core/auth.service';
 import {
   Component,
@@ -12,6 +13,9 @@ import { Router } from '@angular/router';
 
 import { Auth } from '../domain/entities';
 
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { RegisterDialogComponent } from './register-dialog/register-dialog.component';
+
 
 @Component({
   selector: 'app-login',
@@ -23,10 +27,10 @@ import { Auth } from '../domain/entities';
         transform: 'scale(1)'
       })),
       state('active', style({
-        transform: 'scale(1.5)'
+        transform: 'scale(1.1)'
       })),
       transition('inactive => active', animate('500ms ease-in')),
-      transition('active => inactive', animate('1.5s ease-out'))
+      transition('active => inactive', animate('500ms ease-out'))
     ])
   ]
 })
@@ -37,7 +41,16 @@ export class LoginComponent implements OnInit {
   auth: Auth;
   loginBtnState = 'inactive';
 
-  constructor(private service: AuthService, private router: Router) { }
+  // ---------->临时测试
+  // animal: string;
+  // name: string;
+  // <----------临时测试
+
+  constructor(
+    private service: AuthService,
+    private router: Router,
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit() {
   }
@@ -58,4 +71,30 @@ export class LoginComponent implements OnInit {
     this.loginBtnState = stat ? 'active' : 'inactive';
   }
 
+  register() {
+    const dialogRef = this.dialog.open(RegisterDialogComponent, {
+      width: '280px',
+      height: '430px',
+      autoFocus: true,
+    });
+
+
+    dialogRef.afterOpen().subscribe(result => {
+      console.log('dialog visible');
+    });
+  }
+
+  // ---------->临时测试
+  // openDialog(): void {
+  //   const dialogRef = this.dialog.open(RegisterDialogComponent, {
+  //     width: '250px',
+  //     data: { name: this.name, animal: this.animal }
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log('The dialog was closed');
+  //     this.animal = result;
+  //   });
+  // }
+  // <-----------临时测试
 }

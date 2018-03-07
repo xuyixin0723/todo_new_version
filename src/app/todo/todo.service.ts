@@ -27,7 +27,6 @@ export class TodoService {
   addTodo(desc: string): Promise<Todo> {
     // “+”是一个简易方法可以把string转成number
     // 下面直接写userID，就会自动添加key和value
-    const userId: number = +localStorage.getItem('userId');
     const todo = {
       id: UUID.UUID(),
       desc: desc,

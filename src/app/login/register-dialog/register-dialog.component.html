@@ -1,0 +1,49 @@
+<form novalidate
+      [formGroup]="regForm">
+  <h3 mat-dialog-title>Register</h3>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <input matInput
+             type="text"
+             placeholder="Username"
+             formControlName="username">
+    </mat-form-field>
+    <!-- <br/> -->
+    <div formGroupName="passwords"
+         #passwordsRef>
+      <mat-form-field>
+        <input matInput
+               type="password"
+               placeholder="Password"
+               formControlName="password">
+      </mat-form-field>
+      <!-- <br/> -->
+      <mat-form-field>
+        <input matInput
+               type="password"
+               placeholder="Repeat Password"
+               formControlName="repeatPassword">
+      </mat-form-field>
+    </div>
+  </div>
+  <div>
+    <!-- 由于errors也必须是密码不匹配的时候才会有，所以也要加上？否则一上来没有抛异常就会显示不正常 -->
+    <!-- 下面这种angular写法vscode总是报错会有红色波浪线 -->
+    <label>{{regForm.controls.passwords?.errors?.mismatch}}</label>
+    <mat-spinner *ngIf="processingRegister"
+                 class="spinner"
+                 diameter=30></mat-spinner>
+  </div>
+
+  <div mat-dialog-actions>
+
+    <button mat-button
+            (click)="onNoClick()">No Thanks</button>
+    <button mat-raised-button
+            (click)="register()"
+            [disabled]="!regForm.valid || processingRegister"
+            color="primary">
+      Register
+    </button>
+  </div>
+</form>
