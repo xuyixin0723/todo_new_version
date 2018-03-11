@@ -17,7 +17,14 @@ export class TodoHeaderComponent {
   // detect the input value and output this to parent
   @Output() textChanges = new EventEmitter<string>();
   // detect the enter keyup event and output this to parent
-  @Output() onEnterUp = new EventEmitter<boolean>();
+
+  // 书上没有交代这里要把泛型类型boolean改成string
+  // 如果不改会发现每次输入的事件都是true作为新的待办事项
+  // 大家可以恢复代码试试看
+  // @Output() onEnterUp = new EventEmitter<boolean>();
+  @Output() onEnterUp = new EventEmitter<string>();
+
+
 
   constructor(private elementRef: ElementRef) {
     const event$ = Observable.fromEvent(elementRef.nativeElement, 'keyup')
@@ -27,7 +34,8 @@ export class TodoHeaderComponent {
     event$.subscribe(input => this.textChanges.emit(input));
   }
   enterUp() {
-    this.onEnterUp.emit(true);
+    // this.onEnterUp.emit(true);
+    this.onEnterUp.emit(this.inputValue);
     this.inputValue = '';
   }
 }

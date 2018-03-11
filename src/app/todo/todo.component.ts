@@ -3,74 +3,46 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 // import { TodoService } from './todo.service';
 import { Todo } from '../domain/entities';
 
+import { TodoService } from './todo.service';
+
+import { Observable } from 'rxjs/Observable';
+
 @Component({
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css']
 })
 export class TodoComponent implements OnInit {
-  desc = '';
-  todos: Todo[] = [];
+
+  todos: Observable<Todo[]>;
 
   constructor(
-    @Inject('todoService') private service,
+    // @Inject('todoService') private service, // 利用该契机再强调一下使用@Inject的第二个不如再多import一次的原因
+    private service: TodoService,
     private route: ActivatedRoute,
     private router: Router) { }
   ngOnInit() {
-    this.route.params.forEach((params: Params) => {
-      const filter = params['filter'];
-      this.filterTodos(filter);
-    });
+    // 通过路由参数实现了对todoservice中dataStore的订阅
+    this.route.params // 可以通过点击其他页面再回来 然后证明还会进入该断点 说明todoservice中dataStore为啥需要是BehaviorSubject
+      .pluck('filter')// 这个pluck有点为了用而用，并没有用到filter里面的某个属性值
+      .subscribe(filter => {
+        this.service.filterTodos(filter.toString()); // 比起作者的代码不加toString()方法tslint会报警
+        this.todos = this.service.todos;
+      });
   }
 
-  onTextChanges(value) {
-    this.desc = value;
+  addTodo(desc: string) {
+    this.service.addTodo(desc);
   }
-
-  addTodo() {
-    this.service
-      .addTodo(this.desc)
-      .then(todo => {
-        this.todos = [...this.todos, todo];
-        this.desc = '';
-      });
+  toggleTodo(todo: Todo) {
+    this.service.toggleTodo(todo);
   }
-  toggleTodo(todo: Todo): Promise<void> {
-    const i = this.todos.indexOf(todo);
-    return this.service
-      .toggleTodo(todo)
-      .then(t => {
-        this.todos = [
-          ...this.todos.slice(0, i),
-          t,
-          ...this.todos.slice(i + 1)
-        ];
-        return null;
-      });
-  }
-  removeTodo(todo: Todo): Promise<void> {
-    const i = this.todos.indexOf(todo);
-    return this.service
-      .deleteTodoById(todo.id)
-      .then(() => {
-        this.todos = [
-          ...this.todos.slice(0, i),
-          ...this.todos.slice(i + 1)
-        ];
-        return null;
-      });
-  }
-  filterTodos(filter: string): void {
-    this.service
-      .filterTodos(filter)
-      .then(todos => this.todos = [...todos]);
+  removeTodo(todo: Todo) {
+    this.service.deleteTodo(todo);
   }
   toggleAll() {
-    Promise.all(this.todos.map(todo => this.toggleTodo(todo)));
+    this.service.toggleAll();
   }
   clearCompleted() {
-    const completed_todos = this.todos.filter(todo => todo.completed === true);
-    const active_todos = this.todos.filter(todo => todo.completed === false);
-    Promise.all(completed_todos.map(todo => this.service.deleteTodoById(todo.id)))
-      .then(() => this.todos = [...active_todos]);
+    this.service.clearCompleted();
   }
 }

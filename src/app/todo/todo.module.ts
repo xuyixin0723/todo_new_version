@@ -25,8 +25,11 @@ import { TodoListComponent } from './todo-list/todo-list.component';
     TodoItemComponent,
     TodoListComponent
   ],
+  // providers: [
+  //   { provide: 'todoService', useClass: TodoService }
+  // ],
   providers: [
-    { provide: 'todoService', useClass: TodoService }
-  ],
+    TodoService
+  ]
 })
 export class TodoModule { }

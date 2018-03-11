@@ -35,18 +35,6 @@
       "desc": "userId:2 @sit",
       "completed": false,
       "userId": 2
-    },
-    {
-      "id": "ee3b25b3-e0c1-6ec7-d740-72c415b343a1",
-      "desc": "userId: 3 play footba",
-      "completed": true,
-      "userId": 3
-    },
-    {
-      "id": "d9ef4304-3f4e-f4cf-0ae7-8b4960878589",
-      "desc": "userId:3 go swimming",
-      "completed": false,
-      "userId": 3
     }
   ],
   "users": [
@@ -64,11 +52,6 @@
       "id": 3,
       "username": "byron",
       "password": "abc"
-    },
-    {
-      "id": 4,
-      "username": "tom",
-      "password": "a"
     }
   ]
 }

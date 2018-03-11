@@ -1,11 +1,20 @@
-<footer class="footer" *ngIf="itemCount > 0">
+<!-- <footer class="footer" *ngIf="itemCount > 0"> -->
+<!-- 之所以注销*ngIf是因为很可能有几件待办事项，但是没有一件是完成的，那么这种情况点击Completed就会导致footer消失无法切换回来 -->
+<footer class="footer">
   <span class="todo-count">
     <strong>{{itemCount}}</strong> {{itemCount == 1 ? 'item' : 'items'}} left
   </span>
   <ul class="filters">
-    <li><a routerLink="/todo/ALL">All</a></li>
-    <li><a routerLink="/todo/ACTIVE">Active</a></li>
-    <li><a routerLink="/todo/COMPLETED">Completed</a></li>
+    <li>
+      <a routerLink="/todo/ALL">All</a>
+    </li>
+    <li>
+      <a routerLink="/todo/ACTIVE">Active</a>
+    </li>
+    <li>
+      <a routerLink="/todo/COMPLETED">Completed</a>
+    </li>
   </ul>
-  <button class="clear-completed" (click)="onClick()">Clear completed</button>
+  <button class="clear-completed"
+          (click)="onClick()">Clear completed</button>
 </footer>

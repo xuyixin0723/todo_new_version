@@ -2,6 +2,8 @@ import { AuthService } from './../core/auth.service';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { UUID } from 'angular2-uuid';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -14,6 +16,12 @@ export class TodoService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
   private userId: number; // 为配合使用auth替代localStorage时用户筛选仍然有效而新增
 
+  private _todos: BehaviorSubject<Todo[]>;
+
+  private dataStore: {
+    todos: Todo[]
+  };
+
   constructor(private http: Http, private authService: AuthService) {
     // 作者在chap06仍未将用户真正实现，所以作者代码会显示所有用户的待办事项
     // 而如果基于我们自己写得chap05，那么用户信息因为作者改用auth在内存中的实现替代localStorage
@@ -22,76 +30,110 @@ export class TodoService {
     this.authService.getAuth()
       .filter(auth => auth.user != null)
       .subscribe(auth => this.userId = auth.user.id); // 异常处理可以改到此处来
+
+    this.dataStore = { todos: [] };
+    this._todos = new BehaviorSubject<Todo[]>([]);
   }
+
+  private updateStoreAndSubject(todos) {
+    this.dataStore.todos = [...todos];
+    this._todos.next(Object.assign({}, this.dataStore).todos);
+  }
+
+  // 为了方便todo.component.html中通过异步管道直接来绑定它
+  get todos() {
+    return this._todos.asObservable();
+  }
+
   // POST /todos
-  addTodo(desc: string): Promise<Todo> {
+  addTodo(desc: string)/*: Promise<Todo>*/ {
     // “+”是一个简易方法可以把string转成number
     // 下面直接写userID，就会自动添加key和value
-    const todo = {
+    const todoToAdd = { // 这里改名是为了避免与subscribe中todo重名
       id: UUID.UUID(),
       desc: desc,
       completed: false,
       userId: this.userId
     };
-    return this.http
-      .post(this.api_url, JSON.stringify(todo), { headers: this.headers })
-      .toPromise()
-      .then(res => res.json() as Todo)
-      .catch(this.handleError);
+    this.http
+      .post(this.api_url, JSON.stringify(todoToAdd), { headers: this.headers })
+      .map(res => res.json() as Todo)
+      .subscribe(todo => {
+        this.dataStore.todos = [...this.dataStore.todos, todo];
+        this._todos.next(Object.assign({}, this.dataStore).todos);
+      });
   }
   // It was PUT /todos/:id before
   // But we will use PATCH /todos/:id instead
   // Because we don't want to waste the bytes those don't change
-  toggleTodo(todo: Todo): Promise<Todo> {
+  toggleTodo(todo: Todo) {
     const url = `${this.api_url}/${todo.id}`;
+    const i = this.dataStore.todos.indexOf(todo); // 需要知道它在dataStore中的序号
     const updatedTodo = Object.assign({}, todo, { completed: !todo.completed });
-    return this.http
+    this.http
       .patch(url, JSON.stringify({ completed: !todo.completed }), { headers: this.headers })
-      .toPromise()
-      .then(() => updatedTodo)
-      .catch(this.handleError);
+      .subscribe(_ => {
+        this.dataStore.todos = [
+          ...this.dataStore.todos.slice(0, i),
+          updatedTodo,
+          ...this.dataStore.todos.slice(i + 1)
+        ];
+        this._todos.next(Object.assign({}, this.dataStore).todos);
+      });
   }
   // DELETE /todos/:id
-  deleteTodoById(id: string): Promise<void> {
-    const url = `${this.api_url}/${id}`;
-    return this.http
+  deleteTodo(todo: Todo) {
+    const url = `${this.api_url}/${todo.id}`;
+    const i = this.dataStore.todos.indexOf(todo);
+    this.http
       .delete(url, { headers: this.headers })
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
+      .subscribe(_ => {
+        this.dataStore.todos = [
+          ...this.dataStore.todos.slice(0, i),
+          ...this.dataStore.todos.slice(i + 1)
+        ];
+        this._todos.next(Object.assign({}, this.dataStore).todos);
+      });
   }
   // GET /todos
-  getTodos(): Promise<Todo[]> {
-    // 作者截止到chap06未做修改实现用户筛选，同时将storage改用内存保存用户信息
-    // 从嗯个人导致进入显示内容有误 令人发指为在本章实现用户筛选必须注销下面这句，并使用新增的this.userId成员变量
-    // const userId = +localStorage.getItem('userId');
-    const url = `${this.api_url}/?userId=${this.userId}`;
-    return this.http.get(url)
-      .toPromise()
-      .then(res => res.json() as Todo[])
-      .catch(this.handleError);
+  getTodos() {
+    this.http.get(`${this.api_url}?userId=${this.userId}`)
+      .map(res => res.json() as Todo[])
+      .do(t => console.log(t))
+      .subscribe(todos => this.updateStoreAndSubject(todos));
   }
   // GET /todos?completed=true/false
-  filterTodos(filter: string): Promise<Todo[]> {
-    // const userId: number = +localStorage.getItem('userId');
-    const url = `${this.api_url}/?userId=${this.userId}`;
+  filterTodos(filter: string) { //  利用这里作为契机讲解下使用@inject注入依赖项的另外一个弊端那就是查找引用也失去关联，会以为没有被引用
     switch (filter) {
-      case 'ACTIVE': return this.http
-        .get(`${url}&completed=false`)
-        .toPromise()
-        .then(res => res.json() as Todo[])
-        .catch(this.handleError);
-      case 'COMPLETED': return this.http
-        .get(`${url}&completed=true`)
-        .toPromise()
-        .then(res => res.json() as Todo[])
-        .catch(this.handleError);
+      case 'ACTIVE':
+        this.http
+          .get(`${this.api_url}?completed=false&userId=${this.userId}`)
+          .map(res => res.json() as Todo[])
+          .subscribe(todos => this.updateStoreAndSubject(todos));
+        break;
+      case 'COMPLETED':
+        this.http
+          .get(`${this.api_url}?completed=true&userId=${this.userId}`)
+          .map(res => res.json() as Todo[])
+          .subscribe(todos => this.updateStoreAndSubject(todos));
+        break;
       default:
-        return this.getTodos();
+        this.getTodos();
     }
   }
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+
+  // 以下函数都从todo.component.ts移过来了，因为todos都在本服务里面了
+  toggleAll() {
+    this.dataStore.todos.forEach(todo => this.toggleTodo(todo));
   }
+
+  clearCompleted() {
+    this.dataStore.todos
+      .filter(todo => todo.completed)
+      .forEach(todo => this.deleteTodo(todo));
+  }
+  // private handleError(error: any): Promise<any> {
+  //   console.error('An error occurred', error);
+  //   return Promise.reject(error.message || error);
+  // } // 作者这里都修改为subscribe后就没有使用异常，其实这里完全可以保留该函数，然后在每个subscribe中设定一个异常分支来调用该函数
 }
