@@ -35,10 +35,6 @@ export class TodoService {
     this._todos = new BehaviorSubject<Todo[]>([]);
   }
 
-  private updateStoreAndSubject(todos) {
-    this.dataStore.todos = [...todos];
-    this._todos.next(Object.assign({}, this.dataStore).todos);
-  }
 
   // 为了方便todo.component.html中通过异步管道直接来绑定它
   get todos() {
@@ -136,4 +132,10 @@ export class TodoService {
   //   console.error('An error occurred', error);
   //   return Promise.reject(error.message || error);
   // } // 作者这里都修改为subscribe后就没有使用异常，其实这里完全可以保留该函数，然后在每个subscribe中设定一个异常分支来调用该函数
+
+  private updateStoreAndSubject(todos) {
+    this.dataStore.todos = [...todos];
+    this._todos.next(Object.assign({}, this.dataStore).todos);
+  }
+
 }
