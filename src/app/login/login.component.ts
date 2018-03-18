@@ -57,14 +57,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.service
-      .loginWithCredentials(this.username, this.password) // 之前是formValue.login.username的写法，现在改回this.username, 这是为了美观的代价
-      .subscribe(auth => {
-        this.auth = Object.assign({}, auth);
-        if (!auth.hasError) {
-          // this.router.navigate(['todo']);
-          this.router.navigate(['/todo']);
-        } // 异常处理应该写在这里，只是作者没有写
-      });
+      .loginWithCredentials(this.username, this.password);
   }
 
   toggleLoginState(stat: boolean) {

@@ -3,9 +3,26 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { AuthGuardService } from './auth-guard.service';
+/**
+ * 导入ngrx的module
+ */
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+/**
+ * 导入自定义Reducer
+ */
+import { todoReducer, todoFilterReducer } from './todo/reducers/todo.reducer';
+import { authReducer } from './todo/reducers/auth.reducer';
+
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    // 这里不再使用provideStore了,而是forRoot
+    StoreModule.forRoot({
+      todos: todoReducer,
+      todoFilter: todoFilterReducer,
+      auth: authReducer
+    })
   ],
   providers: [
     AuthService,

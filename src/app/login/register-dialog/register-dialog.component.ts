@@ -96,16 +96,12 @@ export class RegisterDialogComponent implements OnInit {
     this.authService
       .register(
         this.regForm.get('username').value,
-        this.regForm.get('passwords').get('password').value)
-      .subscribe(auth => {
-        // this.processingRegister = true;
-        setTimeout(() => {
-          this.dialogRef.close(auth);
-          this.router.navigate(['todo']);
-        }, 1500);
-      }, err => {
+        this.regForm.get('passwords').get('password').value);
         this.processingRegister = false;
-      });
+        setTimeout( () => {
+        this.dialogRef.close();
+        this.router.navigate(['todo']);
+      }, 1500);
   }
 
   // 作者这段代码是基于mdl库, @angular/material的对话框默认就支持ESC退出
