@@ -114,10 +114,4 @@ export class TodoService {
           });
         });
   }
-
-  private updateStoreAndSubject(todos) {
-    this.dataStore.todos = [...todos];
-    this._todos.next(Object.assign({}, this.dataStore).todos);
-  }
-
 }
