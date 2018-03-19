@@ -43,7 +43,7 @@ export class AuthService {
     this.userService
       .findUser(username)
       .subscribe( user => {
-        if (user != null) {
+        if (user !== null) {
           this.store$.dispatch({type: AuthActionType.REGISTER_FAILED_EXISTED});
         } else {
           this.store$.dispatch({type: AuthActionType.REGISTER, payload: {
