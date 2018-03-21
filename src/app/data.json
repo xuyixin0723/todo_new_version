@@ -21,7 +21,7 @@
     {
       "id": "0b1f6614-1def-3346-f070-d6d39c02d6b7",
       "desc": "userId:2 @play tennis",
-      "completed": false,
+      "completed": true,
       "userId": 2
     },
     {
@@ -35,6 +35,18 @@
       "desc": "userId:2 @sit",
       "completed": false,
       "userId": 2
+    },
+    {
+      "id": "c6b69548-d5b4-7373-deb4-8a92acae009b",
+      "desc": "userId:1 @coding",
+      "completed": false,
+      "userId": 1
+    },
+    {
+      "id": "768d7af9-1854-f01b-73b7-2e1de0c05ec3",
+      "desc": "userId: @play badminton",
+      "completed": false,
+      "userId": 1
     }
   ],
   "users": [
