@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Auth } from '../../../domain/entities';
+import { Auth } from '../models/auth';
 
 // 这里将Auth验证进行了修改,更改为枚举的形式,这样就避免了导入的时候
 // 写的很长,以后在写项目时,考虑尽量的分类

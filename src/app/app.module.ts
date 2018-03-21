@@ -13,10 +13,12 @@ import { TodoModule } from './todo/todo.module';
 import { AppComponent } from './app.component';
 import { LoginModule } from './login/login.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // 没有这个动画，下拉菜单下不来
-import { MaterialModule } from './material/material.module';
+import { MaterialModule } from './shared/material/material.module';
 
+import { StoreModule } from '@ngrx/store';
 
-
+import * as forAuth from './login/reducers';
+import * as forTodos from './todo/reducers';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { MaterialModule } from './material/material.module';
     // PlaygroundModule,
     LoginModule,
     BrowserAnimationsModule, // 没有这个动画，下拉菜单下不来
-    MaterialModule
+    MaterialModule,
+    StoreModule.forRoot({})
   ],
   bootstrap: [AppComponent]
 })

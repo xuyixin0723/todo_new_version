@@ -6,7 +6,7 @@ import { Http, Headers, Response } from '@angular/http';
 // import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 
-import { User } from '../domain/entities';
+import { User } from '../login/models/auth';
 
 @Injectable()
 export class UserService {

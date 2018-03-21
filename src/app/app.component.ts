@@ -1,4 +1,4 @@
-import { Auth } from './domain/entities';
+import { Auth } from './login/models/auth';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './core/auth.service';
 import { Router } from '@angular/router';

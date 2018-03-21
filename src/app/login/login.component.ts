@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Auth } from '../domain/entities';
+import { Auth } from './models/auth';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { RegisterDialogComponent } from './register-dialog/register-dialog.component';

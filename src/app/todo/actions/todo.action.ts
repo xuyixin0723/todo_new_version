@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Todo } from '../../../domain/entities';
+import { Todo } from '../models/todo';
 
 // 这里将作者的代码进行了修改,更改为枚举的形式
 export enum TodoRequestType {
@@ -9,12 +9,6 @@ export enum TodoRequestType {
   TOGGLE_ALL = 'TOGGLE_ALL',
   CLEAR_COMPLETED = 'CLEAR_COMPLETED',
   FETCH_FROM_API = 'FETCH_FROM_API'
-}
-// 这里同样进行更改枚举的操作
-export enum VisibilityFilters {
-  SHOW_ALL = 'ALL',
-  SHOW_COMPLETED = 'COMPLETED',
-  SHOW_ACTIVE = 'ACTIVE'
 }
 
 // 手动实现Action的payload,AddTodo是添加一条新的todo,

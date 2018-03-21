@@ -4,33 +4,80 @@ import { Http, Headers } from '@angular/http';
 import { UUID } from 'angular2-uuid';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Store } from '@ngrx/store';
-import { Todo, AppState } from '../domain/state';
-import { TodoRequestType } from './../core/todo/actions/todo.action';
+import { Todo } from './models/todo';
+import { TodoRequestType } from './actions/todo.action';
+import * as fromRoot from '../reducers';
+
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/mapTo';
+import 'rxjs/add/observable/from';
 @Injectable()
 export class TodoService {
 
   private api_url = 'http://localhost:3000/todos';
   private headers = new Headers({ 'Content-Type': 'application/json' });
-  private auth$: Observable<number>;
+  private userId$: Observable<number>;
 
   constructor(private http: Http,
               // private authService: AuthService,
               private router: Router,
-              private store$: Store<AppState>) {
+              private store$: Store<fromRoot.AppState>) {
     // 在构造TodoService时要将此时的登录的用户Id拿到,才能继续
     // 否则是安全隐患的
-    this.auth$ = this.store$
-                     .select(appState => appState.auth)
+    this.userId$ = this.store$
+                     .select(fromRoot.fromAuth.getAuth)
                      .filter(auth => auth.user !== null)
                      .map(auth => auth.user.id);
   }
 
+  getTodosState(route: ActivatedRoute): Observable<Todo[]> {
+    const fetchData$ = this.getTodos()
+    .flatMap( todos => {
+      this.store$.dispatch({
+        type: TodoRequestType.FETCH_FROM_API,
+        payload: todos
+      });
+      return this.store$.select(fromRoot.fromTodos.getTodos);
+    })
+    // startWidth操作符为发出给定的第一个值
+    // BehaviorSubject当然也可以做到,这里从一个空的数组开始,
+    .startWith([]);
+
+    // pluck操作符是获取对象的属性值,比如:
+    /* const source = Rx.Observable.from([
+        { name: 'Joe', age: 30 },
+        { name: 'Sarah', age: 35 }
+      ]);
+      // 提取 name 属性
+      const example = source.pluck('name');
+      // 输出: "Joe", "Sarah"
+      const subscribe = example.subscribe(val => console.log(val));
+    */
+    const filterData$ = route.params.pluck('filter')
+    .do(value => {
+      const filter = value as string;
+      this.store$.dispatch({type: filter});
+    })
+    // select(...)为选择返回什么样的Observable数据
+    .flatMap(_ => this.store$.select(fromRoot.fromTodos.getTodoFilter));
+
+    // 这里只有当fetchData$和filterData$都至少有一个值之后才会触发
+    // 这里的第三个参数是projection 函数,projection的参数是所有Observable
+    // 对象,当fetchData$和filterData$都有了值之后会调用这个函数
+    return Observable.combineLatest(
+      fetchData$,
+      filterData$,
+      (todos: Todo[], filter: any) => {
+        return todos.filter(filter);
+      }
+    );
+  }
   // POST /todos
   addTodo(desc: string): void {
-    this.auth$.flatMap( userId => {
+    this.userId$.flatMap( userId => {
       const todoToAdd = {
         id: UUID.UUID(),
         desc: desc,
@@ -77,7 +124,7 @@ export class TodoService {
   }
   // GET /todos
   getTodos(): Observable<Todo[]> {
-    return this.auth$
+    return this.userId$
                .flatMap(userId => this.http.get(`${this.api_url}?userId=${userId}`))
                .map(res => res.json() as Todo[]);
   }

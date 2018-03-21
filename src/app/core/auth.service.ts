@@ -9,11 +9,13 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import { Auth, AppState } from '../domain/state';
 
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AuthActionType } from './todo/actions/auth.action';
+import { AuthActionType } from '../login/actions/auth.action';
+
+import * as fromRoot from '../reducers';
+import { Auth } from '../login/models/auth';
 @Injectable()
 export class AuthService {
   // auth: Auth = { user: null, hasError: true, redirectUrl: '', errMsg: 'not logged in' };
@@ -22,13 +24,13 @@ export class AuthService {
 
   constructor(private http: Http,
               private userService: UserService,
-              private store$: Store<AppState>,
+              private store$: Store<fromRoot.AppState>,
               private router: Router) {
     // this.subject.next(this.auth); // 必须要考虑到没有login直接在浏览器输入其它路由的情况，如果这里没有就会导致无法获得auth
   }
 
   getAuth(): Observable<Auth> {
-    return this.store$.select( appState => appState.auth );
+    return this.store$.select( fromRoot.fromAuth.getAuth );
   }
   unAuth(): void {
     this.store$.dispatch({type: AuthActionType.LOGOUT});

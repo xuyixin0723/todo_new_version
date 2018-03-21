@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Todo } from '../../domain/entities';
+import { Todo } from '../models/todo';
 
 @Component({
   selector: 'app-todo-list',
@@ -9,7 +9,7 @@ import { Todo } from '../../domain/entities';
 export class TodoListComponent {
   _todos: Todo[] = [];
   @Input()
-  set todos(todos:Todo[]){
+  set todos(todos: Todo[]){
     this._todos = [...todos];
   }
   get todos() {
