@@ -58,8 +58,15 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.service
-      .loginWithCredentials(this.username, this.password);
+    // this.service
+    //   .loginWithCredentials(this.username, this.password);
+    this.store$.dispatch({
+      type: AuthActionType.LOGIN,
+      payload: {
+        id: null,
+        username: this.username,
+        password: this.password
+      }});
   }
 
   toggleLoginState(stat: boolean) {

@@ -18,9 +18,11 @@ export const initialState: State = {
 export const authReducer = (state = initialState, action: AuthActions) => {
     switch (action.type) {
       case AuthActionType.LOGIN:
-        return Object.assign({},
-                            state,
-                            {auth: action.payload});
+        return state;
+      case AuthActionType.LOGIN_SUCCESS:
+      return Object.assign({},
+                          state,
+                          {auth: action.payload});
       case AuthActionType.LOGIN_FAILED_NOT_EXISTED:
         return Object.assign({},
                             state,
@@ -53,10 +55,12 @@ export const authReducer = (state = initialState, action: AuthActions) => {
                               }
                             });
       case AuthActionType.REGISTER:
-        return Object.assign({},
-                            state,
-                            { auth: action.payload}
-                            );
+        return state;
+      case AuthActionType.REGISTER_SUCCESS:
+      return Object.assign({},
+                          state,
+                          { auth: action.payload}
+                          );
       case AuthActionType.REGISTER_FAILED_EXISTED:
         return Object.assign({},
                             state,

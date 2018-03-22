@@ -10,6 +10,9 @@ import {
 import { Subscription } from 'rxjs/Subscription'; // 用于订阅类型的强类型检测， 第8章提前讲的课里面有涉及
 import { Router } from '@angular/router';
 
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../../reducers';
+import { AuthActionType } from './../actions/auth.action';
 import {
   FormGroup,
   Validators,
@@ -40,6 +43,7 @@ export class RegisterDialogComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
+    private store$: Store<fromRoot.AppState>,
     @Inject(MAT_DIALOG_DATA) public data: any) { // 这里使用@Inject是因为注入的是第三方库，我们不关心查找它的引用
     this.regForm = fb.group({
       // login中username要求至少3个字符，那注册是理应也要有3个字符，作者不设minLength是不对的，必须增加Validators.minLength(3)
@@ -93,15 +97,23 @@ export class RegisterDialogComponent implements OnInit {
     // 作者演示了如何获取一个订阅的Observable对象，其实如果没有单独在其它成员函数中使用只是单纯的局部变量，
     // 那是没必要这么做得，这还意味着ngOnDestroy还要取消订阅，不这么做还会有内存泄漏风险
     // this.subscription = this.authService
-    this.authService
-      .register(
-        this.regForm.get('username').value,
-        this.regForm.get('passwords').get('password').value);
-        this.processingRegister = false;
-        setTimeout( () => {
+    // this.authService
+    //     .register(
+    //     this.regForm.get('username').value,
+    //     this.regForm.get('passwords').get('password').value);
+    this.store$.dispatch({
+      type: AuthActionType.REGISTER,
+      payload: {
+        id: null,
+        username: this.regForm.get('username').value,
+        password: this.regForm.get('passwords').get('password').value
+      }
+    });
+    this.processingRegister = false;
+    setTimeout( () => {
         this.dialogRef.close();
         this.router.navigate(['todo']);
-      }, 1500);
+    }, 1500);
   }
 
   // 作者这段代码是基于mdl库, @angular/material的对话框默认就支持ESC退出

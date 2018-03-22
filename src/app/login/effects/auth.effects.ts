@@ -1,14 +1,10 @@
+import { UserService } from './../../core/user.service';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { AuthService } from '../../core/auth.service';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/of';
-import 'rxjs/add/operator/tap';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/exhaustMap';
-import 'rxjs/add/operator/catchError';
 
 import * as fromAuthActions from '../actions/auth.action';
 
@@ -18,11 +14,68 @@ export class AuthEffects {
     @Effect()
     login$ = this.actions$
         .ofType(fromAuthActions.AuthActionType.LOGIN)
-        .map((action: fromAuthActions.LoginAction) => action.payload);
+        .map((action: fromAuthActions.LoginAction) => action.payload)
+        // https://rxjs-cn.github.io/learn-rxjs-operators/operators/transformation/switchmap.html
+        .switchMap(user => {
+            return this.authService.loginWithCredentials(user)
+                .map(authUser => {
+                    if (null === authUser) {
+                        // 另一种写法,调用action
+                        return new fromAuthActions.LoginFaildNotExistedAction();
+                    } else if ( authUser.password !== user.password) {
+                        return new fromAuthActions.LoginFaildNotMatchAction();
+                    } else {
+                        return new fromAuthActions.LoginSuccessAction({
+                                user: authUser,
+                                hasError: false,
+                                errMsg: null,
+                                redirectUrl: null
+                        });
+                    }
+                });
+        });
 
+    @Effect({ dispatch: false })
+    loginSuccess$ = this.actions$
+        .ofType(fromAuthActions.AuthActionType.LOGIN_SUCCESS)
+        .map((action: fromAuthActions.LoginSuccessAction) => {
+            this.router.navigate(['todo']);
+        });
+
+    @Effect()
+    register$ = this.actions$
+        .ofType(fromAuthActions.AuthActionType.REGISTER)
+        .map((action: fromAuthActions.RegisterAction) => action.payload)
+        .switchMap(user => {
+            return this.authService.register(user.username, user.password)
+                       .map( authUser => { // 这里的authUser是访问服务器返回的
+                            if (authUser !== null) {
+                                return new fromAuthActions.RegisterFailedExistedAction();
+                            } else {
+                                const toAddUser = {
+                                    id: null, // json-server 会自增长id的
+                                    username: user.username,
+                                    password: user.password
+                                };
+                                return new fromAuthActions.RegisterSuccessAction({
+                                        user: toAddUser,
+                                        hasError: false,
+                                        errMsg: null,
+                                        redirectUrl: null
+                                });
+                            }
+                       });
+        });
+    @Effect({ dispatch: false })
+    registerSuccess$ = this.actions$
+        .ofType(fromAuthActions.AuthActionType.REGISTER_SUCCESS)
+        .map((action: fromAuthActions.RegisterSuccessAction) => {
+            this.userService.addUser(action.payload.user);
+        });
     constructor(
         private actions$: Actions,
         private router: Router,
-        private authService: AuthService
+        private authService: AuthService,
+        private userService: UserService
     ) {}
 }

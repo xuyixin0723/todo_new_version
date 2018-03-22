@@ -15,7 +15,7 @@ import { Store } from '@ngrx/store';
 import { AuthActionType } from '../login/actions/auth.action';
 
 import * as fromRoot from '../reducers';
-import { Auth } from '../login/models/auth';
+import { Auth, User } from '../login/models/auth';
 @Injectable()
 export class AuthService {
   // auth: Auth = { user: null, hasError: true, redirectUrl: '', errMsg: 'not logged in' };
@@ -36,52 +36,47 @@ export class AuthService {
     this.store$.dispatch({type: AuthActionType.LOGOUT});
   }
 
-  register(username: string, password: string): void {
-    const toAddUser = {
-      id: null, // json-server 会自增长id的
-      username: username,
-      password: password
-    };
-    this.userService
-      .findUser(username)
-      .subscribe( user => {
-        if (user !== null) {
-          this.store$.dispatch({type: AuthActionType.REGISTER_FAILED_EXISTED});
-        } else {
-          this.store$.dispatch({type: AuthActionType.REGISTER, payload: {
-            user: toAddUser,
-            hasError: false,
-            errMsg: null,
-            redirectUrl: null
-          }});
-        }
-      });
+  register(username: string, password: string): Observable<User> {
+    return this.userService
+      .findUser(username);
+      // .subscribe( user => {
+      //   if (user !== null) {
+      //     this.store$.dispatch({type: AuthActionType.REGISTER_FAILED_EXISTED});
+      //   } else {
+      //     this.store$.dispatch({type: AuthActionType.REGISTER, payload: {
+      //       user: toAddUser,
+      //       hasError: false,
+      //       errMsg: null,
+      //       redirectUrl: null
+      //     }});
+      //   }
+      // });
   }
 
-  loginWithCredentials(username: string, password: string): void {
-    this.userService
-      .findUser(username)
-      .subscribe(user => {
-        if ( null === user ) {
-          this.store$.dispatch({
-            type: AuthActionType.LOGIN_FAILED_NOT_EXISTED
-          });
-        } else if ( password !== user.password) {
-          this.store$.dispatch({
-            type: AuthActionType.LOGIN_FAILED_NOT_MATCH
-          });
-        } else { // 如果用户存在,密码又匹配那么就可以直接进入todo界面了
-          this.store$.dispatch({
-            type: AuthActionType.LOGIN,
-            payload: {
-              user: user,
-              hasError: false,
-              errMsg: null,
-              redirectUrl: null
-            }
-          });
-          this.router.navigate(['todo']);
-        }
-      });
+  loginWithCredentials(user: User): Observable<User> {
+    return this.userService
+      .findUser(user.username);
+      // .subscribe(user => {
+      //   if ( null === user ) {
+      //     this.store$.dispatch({
+      //       type: AuthActionType.LOGIN_FAILED_NOT_EXISTED
+      //     });
+      //   } else if ( password !== user.password) {
+      //     this.store$.dispatch({
+      //       type: AuthActionType.LOGIN_FAILED_NOT_MATCH
+      //     });
+      //   } else { // 如果用户存在,密码又匹配那么就可以直接进入todo界面了
+      //     this.store$.dispatch({
+      //       type: AuthActionType.LOGIN,
+      //       payload: {
+      //         user: user,
+      //         hasError: false,
+      //         errMsg: null,
+      //         redirectUrl: null
+      //       }
+      //     });
+      //     this.router.navigate(['todo']);
+      //   }
+      // });
   }
 }
