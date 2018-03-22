@@ -66,6 +66,8 @@ export class AuthEffects {
                             }
                        });
         });
+    // 标记dispatch为false,代表这个effects将不派发Actions,否则容易出错
+    // effect如果必须返回一个Observable类型,哪怕是null,当我们没有返回的时候为null
     @Effect({ dispatch: false })
     registerSuccess$ = this.actions$
         .ofType(fromAuthActions.AuthActionType.REGISTER_SUCCESS)
