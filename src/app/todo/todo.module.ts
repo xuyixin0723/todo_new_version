@@ -14,12 +14,15 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 
 import { reducers } from './reducers/index';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { TodoEffects } from './effects/todo.effects';
 @NgModule({
   imports: [
     SharedModule,
     HttpModule,
     TodoRoutingModule,
-    StoreModule.forFeature('todos', reducers)
+    StoreModule.forFeature('todos', reducers),
+    EffectsModule.forFeature([TodoEffects])
   ],
   declarations: [
     TodoComponent,

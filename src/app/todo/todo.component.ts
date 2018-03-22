@@ -1,14 +1,14 @@
+import { TodoRequestActions, TodoRequestType } from './/actions/todo.action';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 // import { TodoService } from './todo.service';
 import { Todo } from './models/todo';
-
+import { UUID } from 'angular2-uuid';
 import { TodoService } from './todo.service';
 
 import { Observable } from 'rxjs/Observable';
 
 import { Store } from '@ngrx/store';
-import { TodoRequestType } from './actions/todo.action';
 import * as fromRoot from '../reducers';
 
 import 'rxjs/add/operator/startWith';
@@ -23,28 +23,48 @@ import 'rxjs/add/observable/combineLatest';
 export class TodoComponent implements OnInit {
 
   todos: Observable<Todo[]>;
-
+  userId$: Observable<number>;
   constructor(
     private service: TodoService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private store$: Store<fromRoot.AppState>) {
       this.todos = this.service.getTodosState(route);
     }
     ngOnInit() {
     }
 
     addTodo(desc: string): void {
-      this.service.addTodo(desc);
+        const todoToAdd = {
+          id: UUID.UUID(),
+          desc: desc,
+          completed: false,
+          userId: this.todos.do(todos => todos[0].id)
+        };
+        this.store$.dispatch({
+          type: TodoRequestType.ADD_TODO,
+          payload: todoToAdd
+        });
     }
     toggleTodo(todo: Todo): void {
-      this.service.toggleTodo(todo);
+      this.store$.dispatch({
+        type: TodoRequestType.TOGGLE_TODO,
+        payload: todo
+      });
     }
     removeTodo(todo: Todo): void {
-      this.service.deleteTodo(todo);
+      this.store$.dispatch({
+        type: TodoRequestType.REMOVE_TODO,
+        payload: todo
+      });
     }
     toggleAll(): void {
-      this.service.toggleAll();
+      this.store$.dispatch({
+        type: TodoRequestType.TOGGLE_ALL
+      });
     }
     clearCompleted(): void {
-      this.service.clearCompleted();
+      this.store$.dispatch({
+        type: TodoRequestType.CLEAR_COMPLETED
+      });
     }
 }

@@ -33,6 +33,9 @@ export class TodoService {
                      .map(auth => auth.user.id);
   }
 
+  getUserId(): Observable<number> {
+    return this.userId$;
+  }
   getTodosState(route: ActivatedRoute): Observable<Todo[]> {
     const fetchData$ = this.getTodos()
     .flatMap( todos => {
@@ -76,51 +79,23 @@ export class TodoService {
     );
   }
   // POST /todos
-  addTodo(desc: string): void {
-    this.userId$.flatMap( userId => {
-      const todoToAdd = {
-        id: UUID.UUID(),
-        desc: desc,
-        completed: false,
-        userId: userId
-      };
+  addTodo(todoToAdd: Todo): Observable<Todo> {
       return this.http
                  .post(this.api_url, JSON.stringify(todoToAdd), {headers: this.headers})
                  .map(res => res.json() as Todo);
-    }).subscribe(todo => {
-      this.store$.dispatch({
-        type: TodoRequestType.ADD_TODO,
-        payload: todo
-      });
-    });
   }
 
   toggleTodo(todo: Todo): void {
     const url = `${this.api_url}/${todo.id}`;
     const updatedTodo = Object.assign({}, todo, { completed: !todo.completed });
     this.http
-        .patch(url, JSON.stringify({ completed: !todo.completed }), { headers: this.headers })
-        // mapTo操作符是将Observable的对象映射成同一个值
-        .mapTo(updatedTodo)
-        .subscribe( _todo => {
-          this.store$.dispatch({
-            type: TodoRequestType.TOGGLE_TODO,
-            payload: _todo
-          });
-      });
+        .patch(url, JSON.stringify({ completed: !todo.completed }), { headers: this.headers });
   }
   // DELETE /todos/:id
   deleteTodo(todo: Todo): void {
     const url = `${this.api_url}/${todo.id}`;
     this.http
-        .delete(url, { headers: this.headers })
-        .mapTo(Object.assign({}, todo))
-        .subscribe( _todo => {
-          this.store$.dispatch({
-            type: TodoRequestType.REMOVE_TODO,
-            payload: _todo
-          });
-      });
+        .delete(url, { headers: this.headers });
   }
   // GET /todos
   getTodos(): Observable<Todo[]> {
@@ -140,11 +115,6 @@ export class TodoService {
           const updatedTodo = Object.assign({}, todo, {completed: !todo.completed});
           return this.http
                      .patch(url, JSON.stringify({completed: !todo.completed}), {headers: this.headers});
-        }).subscribe( () => {
-             // 这里调用refucer将本地的状态库内的todo全部反转
-             this.store$.dispatch({
-               type: TodoRequestType.TOGGLE_ALL
-             });
         });
   }
 
@@ -155,10 +125,6 @@ export class TodoService {
           const url = `${this.api_url}/${todo.id}`;
           return this.http
           .delete(url, {headers: this.headers});
-        }).subscribe(() => {
-          this.store$.dispatch({
-            type: TodoRequestType.CLEAR_COMPLETED
-          });
         });
   }
 }

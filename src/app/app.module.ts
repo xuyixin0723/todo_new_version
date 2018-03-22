@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { MaterialModule } from './shared/material/material.module';
 
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import * as forAuth from './login/reducers';
 import * as forTodos from './todo/reducers';
@@ -34,7 +35,8 @@ import * as forTodos from './todo/reducers';
     LoginModule,
     BrowserAnimationsModule, // 没有这个动画，下拉菜单下不来
     MaterialModule,
-    StoreModule.forRoot({})
+    StoreModule.forRoot({}), // 这里必须引入,否则将会出错
+    EffectsModule.forRoot([]),
   ],
   bootstrap: [AppComponent]
 })

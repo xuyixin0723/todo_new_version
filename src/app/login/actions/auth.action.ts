@@ -5,6 +5,7 @@ import { Auth } from '../models/auth';
 // 写的很长,以后在写项目时,考虑尽量的分类
 export enum AuthActionType {
     LOGIN = 'LOGIN',
+    LOGIN_SUCCESS = 'LOGIN_SUCCESS',
     LOGIN_FAILED_NOT_EXISTED = 'LOGIN_FAILED_NOT_EXISTED',
     LOGIN_FAILED_NOT_MATCH = 'LOGIN_FAILED_NOT_MATCH',
     LOGOUT = 'LOGOUT',

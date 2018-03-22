@@ -1,4 +1,3 @@
-
 import { AuthService } from './../core/auth.service';
 import {
   Component,
@@ -16,7 +15,9 @@ import { Auth } from './models/auth';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { RegisterDialogComponent } from './register-dialog/register-dialog.component';
 
-
+import { Store } from '@ngrx/store';
+import { AuthActionType } from './actions/auth.action';
+import * as fromRoot from '../reducers';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -49,7 +50,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private service: AuthService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private store$: Store<fromRoot.AppState>
   ) { }
 
   ngOnInit() {
