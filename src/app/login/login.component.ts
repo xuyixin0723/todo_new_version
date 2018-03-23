@@ -18,6 +18,7 @@ import { RegisterDialogComponent } from './register-dialog/register-dialog.compo
 import { Store } from '@ngrx/store';
 import { AuthActionType } from './actions/auth.action';
 import * as fromRoot from '../reducers';
+import * as fromRouterActions from '../actions/router.actions';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -67,6 +68,18 @@ export class LoginComponent implements OnInit {
         username: this.username,
         password: this.password
       }});
+    // 订阅Login成功后的状态,如果确认成功了,将页面导航到todo界面
+    this.store$.select(fromRoot.fromAuth.getAuth)
+        .subscribe(res => {
+          if (res.hasError !== true) {
+              this.store$.dispatch({
+                type: fromRouterActions.GO,
+                payload: {
+                  path: ['/todo']
+                }
+              });
+          }
+        });
   }
 
   toggleLoginState(stat: boolean) {

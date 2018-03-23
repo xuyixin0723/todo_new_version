@@ -17,9 +17,10 @@ import { MaterialModule } from './shared/material/material.module';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import {RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 
-import * as forAuth from './login/reducers';
-import * as forTodos from './todo/reducers';
+import * as fromRoot from './reducers';
+import { RouterEffects } from './effects/router.effects';
 
 @NgModule({
   declarations: [
@@ -35,8 +36,14 @@ import * as forTodos from './todo/reducers';
     LoginModule,
     BrowserAnimationsModule, // 没有这个动画，下拉菜单下不来
     MaterialModule,
-    StoreModule.forRoot({}), // 这里必须引入,否则将会出错
-    EffectsModule.forRoot([]),
+    StoreModule.forRoot(fromRoot.reducers, {}), // 这里必须引入,否则将会出错
+    EffectsModule.forRoot([RouterEffects]),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router'
+    })
+  ],
+  // 使用ngrx/router需要在这里定义
+  providers: [ {provide: RouterStateSerializer, useClass: fromRoot.CustomeSerializer}
   ],
   bootstrap: [AppComponent]
 })

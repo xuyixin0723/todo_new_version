@@ -35,12 +35,12 @@ export class AuthEffects {
                 });
         });
 
-    @Effect({ dispatch: false })
-    loginSuccess$ = this.actions$
-        .ofType(fromAuthActions.AuthActionType.LOGIN_SUCCESS)
-        .map((action: fromAuthActions.LoginSuccessAction) => {
-            this.router.navigate(['todo']);
-        });
+    // @Effect({ dispatch: false })
+    // loginSuccess$ = this.actions$
+    //     .ofType(fromAuthActions.AuthActionType.LOGIN_SUCCESS)
+    //     .map((action: fromAuthActions.LoginSuccessAction) => {
+    //         this.router.navigate(['todo']);
+    //     });
 
     @Effect()
     register$ = this.actions$
