@@ -93,7 +93,6 @@ export class LoginComponent implements OnInit {
       autoFocus: true,
     });
 
-
     dialogRef.afterOpen().subscribe(result => {
       console.log('dialog visible');
     });

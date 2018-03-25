@@ -21,6 +21,7 @@ import {RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-
 
 import * as fromRoot from './reducers';
 import { RouterEffects } from './effects/router.effects';
+import { PcbviewModule } from './pcbview/pcbview.module';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { RouterEffects } from './effects/router.effects';
     TodoModule,
     // PlaygroundModule,
     LoginModule,
+    PcbviewModule,
     BrowserAnimationsModule, // 没有这个动画，下拉菜单下不来
     MaterialModule,
     StoreModule.forRoot(fromRoot.reducers, {}), // 这里必须引入,否则将会出错

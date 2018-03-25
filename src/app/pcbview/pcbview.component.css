@@ -1,0 +1,16 @@
+div#tooltip {
+    position: absolute;       
+    display: flex;
+    width: 80px;
+    padding: 10px;
+    font-family: 'Open Sans' sans-serif;
+    color: #fff;
+    background-color: #3f51b5;
+    animation-duration: 50ms;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.23), 0 3px 12px rgba(0, 0, 0, 0.16);
+    /* border: 1px solid #999; */
+    /* border-radius: 2px; */
+    pointer-events: none;
+    opacity: 1;
+    /* z-index: 10; */
+}

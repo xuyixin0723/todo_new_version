@@ -28,6 +28,10 @@ const routes: Routes = [
   {
     path: 'manual',
     loadChildren: 'app/manual/manual.module#ManualModule',
+  },
+  {
+    path: 'cccc',
+    redirectTo: 'pcbview',
   }
 ];
 
