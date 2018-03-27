@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
   // <----------临时测试
 
   constructor(
-    private service: AuthService,
     private router: Router,
     public dialog: MatDialog,
     private store$: Store<fromRoot.AppState>

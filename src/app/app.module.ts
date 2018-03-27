@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,11 +18,13 @@ import { MaterialModule } from './shared/material/material.module';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { DBModule } from '@ngrx/db';
 import {RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import * as fromRoot from './reducers';
 import { RouterEffects } from './effects/router.effects';
 import { PcbviewModule } from './pcbview/pcbview.module';
+import { schema } from './pcbview/models/componentsDB';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,7 @@ import { PcbviewModule } from './pcbview/pcbview.module';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     HttpModule,
     AppRoutingModule,
     CoreModule,
@@ -42,7 +46,8 @@ import { PcbviewModule } from './pcbview/pcbview.module';
     EffectsModule.forRoot([RouterEffects]),
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
-    })
+    }),
+    DBModule.provideDB(schema)
   ],
   // 使用ngrx/router需要在这里定义
   providers: [ {provide: RouterStateSerializer, useClass: fromRoot.CustomeSerializer}

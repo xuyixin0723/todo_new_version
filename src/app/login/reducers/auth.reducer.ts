@@ -78,6 +78,5 @@ export const authReducer = (state = initialState, action: AuthActions) => {
 
 // 获取状态库的子状态,俗称切面状态
 export const getAuth = (state: State) => {
-  console.log(state.auth);
   return state.auth;
 };

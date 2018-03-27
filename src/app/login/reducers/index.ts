@@ -6,7 +6,7 @@ export interface AuthState {
     auth: fromAuth.State;
 }
 // 使用ActionReducerMap,防止后面的人追加的时候不知道如何追加
-export const reducers: ActionReducerMap<any> = {
+export const reducers: ActionReducerMap<AuthState> = {
     auth: fromAuth.authReducer
 };
 

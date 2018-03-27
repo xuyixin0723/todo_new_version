@@ -13,7 +13,7 @@ export interface State {
     todoState: TodosState;
 }
 // 这个地方报的错误,是可以正常使用的
-export const reducers: ActionReducerMap<any> = {
+export const reducers: ActionReducerMap<TodosState> = {
     todos: fromTodos.todoReducer,
     todoFilter: fromFilter.todoFilterReducer
 };
