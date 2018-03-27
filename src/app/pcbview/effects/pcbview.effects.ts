@@ -21,7 +21,6 @@ export class PcbviewEffects {
     // https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/defer.md
     // https://buctwbzs.gitbooks.io/rxjs/content/deffer.html
     openDB$: Observable<any> = defer(() => { // 延迟创建,
-      console.log('数据库被打开');
       return this.db.open('pcbview_components', 1); // 之前存储的数据库名字
     });
 
@@ -38,7 +37,7 @@ export class PcbviewEffects {
                     } else { // 如本地没有将从服务器上获取最新的数据然后存储到本地的indexDB中
                         return this.pcbviewService.getComponents().map((res) => {
                             for (let i = 0; i < res.length; i++) {
-                                this.db.insert('components', [res[i]]).subscribe((resa) => {console.log(i); });
+                                this.db.insert('components', [res[i]]);
                             }
                             return new fromPcbviewActions.FetchAction(res);
                         });
