@@ -15,6 +15,7 @@ import { reducers } from './reducers';
 import { PcbviewEffects } from './effects/pcbview.effects';
 import { HttpClientModule } from '@angular/common/http';
 import { schema } from './models/componentsDB';
+import { NotifyService } from './service/notify';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { schema } from './models/componentsDB';
     PcbviewComponent
   ],
   providers: [
-    PcbviewService
+    PcbviewService,
+    NotifyService
   ]
 })
 export class PcbviewModule { }

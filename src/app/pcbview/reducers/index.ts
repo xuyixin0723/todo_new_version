@@ -9,6 +9,10 @@ export const reducers: ActionReducerMap<ComponentState> = {
     components: fromPcbview.pcbviewReducer
 };
 // createFeatureSelector创建特性的selector,并起一个名字
+// selector介绍
+// https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
+// ComponentState是我们定义的state接口,不要写fromPcbview.State,因为reducers类型为ComponentState
+// 否则会在effects中出现莫名的错误
 export const selectComponentState = createFeatureSelector<ComponentState>('components');
 
 export const selectComponentEntitiesState = createSelector(

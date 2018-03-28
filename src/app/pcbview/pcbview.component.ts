@@ -1,4 +1,6 @@
+import { NotifyService } from './service/notify';
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import * as fromRoot from '../reducers';
@@ -6,6 +8,7 @@ import { PcbViewActionsType } from './actions/pcbview.actions';
 
 import { PcbviewService } from './pcbview.service';
 import { Components } from './models/componentsDB';
+
 import * as d3 from 'd3';
 
 import 'rxjs/add/operator/map';
@@ -28,7 +31,10 @@ export class PcbviewComponent implements OnInit {
   @ViewChild('pcbview')
   canvasRef: ElementRef;
   constructor(private store$: Store<fromRoot.AppState>,
-              private pcbviewService: PcbviewService) {
+              private pcbviewService: PcbviewService,
+              private snacBar: MatSnackBar,
+              private notify: NotifyService) {
+
     this.store$.dispatch({type: PcbViewActionsType.LOAD_LOCAL_DATA});
     this.components$ = this.store$.select(fromRoot.fromPcbview.selectAllComponents);
 
@@ -42,6 +48,8 @@ export class PcbviewComponent implements OnInit {
         }
         if ( this.components.length !== 0 ) {
           this.render();
+          // MatSnackBar会把上一个MatSnackBar立即关闭,所以使用时注意
+          // this.openSnackBar('数据加载完成!', 'SUCCESS');
         }
       },
       err => {
@@ -51,7 +59,11 @@ export class PcbviewComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.notify.get().subscribe((result) => {
+      if (result === true) {
+        this.openSnackBar('有最新的数据需要更新!', 'WARNING');
+      }
+    });
     this.canvas = this.canvasRef.nativeElement;
     this.context = this.canvas.getContext('2d');
     this.height = this.canvas.height;
@@ -92,7 +104,7 @@ export class PcbviewComponent implements OnInit {
       });
   }
 
-  selectSubject() {
+  selectSubject(): any {
     const
     x = this.transform.invertX(d3.event.layerX || d3.event.offsetX),
     y = this.transform.invertY(d3.event.layerY || d3.event.offsety);
@@ -110,12 +122,12 @@ export class PcbviewComponent implements OnInit {
     }
     return {isSelected: false, component: null};
   }
-  zoomed() {
+  zoomed(): void {
     this.transform = d3.event.transform;
     this.render();
   }
 
-  dragsubject() {
+  dragsubject(): any {
     const
       x = this.transform.invertX(d3.event.x),
       y = this.transform.invertY(d3.event.y);
@@ -135,14 +147,14 @@ export class PcbviewComponent implements OnInit {
       }
   }
 
-  dragged() {
+  dragged(): void {
     d3.event.subject[0] = this.transform.invertX(d3.event.x);
     d3.event.subject[1] = this.transform.invertY(d3.event.y);
 
     this.render();
   }
 
-  render() {
+  render(): void {
     this.context.save();
     this.context.clearRect(0, 0, this.width, this.height);
     this.context.beginPath();
@@ -154,5 +166,11 @@ export class PcbviewComponent implements OnInit {
     });
     this.context.fill();
     this.context.restore();
+  }
+
+  openSnackBar(message: string, action: string): void {
+    this.snacBar.open(message, action, {
+      duration: 2000
+    });
   }
 }

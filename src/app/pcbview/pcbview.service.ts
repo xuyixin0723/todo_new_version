@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Components } from './models/componentsDB';
 import { Store } from '@ngrx/store';
@@ -22,6 +22,6 @@ export class PcbviewService {
     const url = `${this.api_url}/`;
     return this.http
                .get(url)
-               .map( res => res as Components[] );
+               .map( (res) => res as Components[]);
   }
 }

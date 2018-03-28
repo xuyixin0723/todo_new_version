@@ -47,7 +47,7 @@ import { schema } from './pcbview/models/componentsDB';
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
-    DBModule.provideDB(schema)
+    DBModule.provideDB(schema) // 将indexdb数据库在这里导入
   ],
   // 使用ngrx/router需要在这里定义
   providers: [ {provide: RouterStateSerializer, useClass: fromRoot.CustomeSerializer}
