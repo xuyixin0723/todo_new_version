@@ -24,7 +24,8 @@ import {RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-
 import * as fromRoot from './reducers';
 import { RouterEffects } from './effects/router.effects';
 import { PcbviewModule } from './pcbview/pcbview.module';
-import { schema } from './pcbview/models/componentsDB';
+// import { schema } from './pcbview/models/componentsDB';
+import { NgForageModule } from '@ngforage/ngforage-ng5';
 
 @NgModule({
   declarations: [
@@ -46,8 +47,8 @@ import { schema } from './pcbview/models/componentsDB';
     EffectsModule.forRoot([RouterEffects]),
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
-    }),
-    DBModule.provideDB(schema) // 将indexdb数据库在这里导入
+    })
+    // DBModule.provideDB(schema) // 将indexdb数据库在这里导入
   ],
   // 使用ngrx/router需要在这里定义
   providers: [ {provide: RouterStateSerializer, useClass: fromRoot.CustomeSerializer}

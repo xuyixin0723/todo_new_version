@@ -1,4 +1,5 @@
-import { DBSchema } from '@ngrx/db';
+// import { DBSchema } from '@ngrx/db';
+// import { RxDocument, RxCollection, RxDatabase } from 'rxdb';
 export interface Components {
     id: number;
     X: number;
@@ -7,17 +8,31 @@ export interface Components {
     H: number;
 }
 
-/**
- * ngrx/db uses a simple schema config object to initialize stores in IndexedDB.
- */
-export const schema: DBSchema = {
-    version: 1,
-    name: 'pcbview_components', // 本地数据库的名称
-    stores: {
-      components: { // 这里的components是我们定义的数据表头名字,好比json数据内的分组属性
-        autoIncrement: true, // id是否自动增长,当我们添加的时候
-        primaryKey: 'id' // 设置主键类型,这里的id为我们定义数据内的属性,如果没有设置组件,
-        // DBSchema会为我们自动生成一个唯一的id
-      }
-    },
-};
+// declare interface RxComponentType {
+//     id: number;
+//     X: number;
+//     Y: number;
+//     W: number;
+//     H: number;
+// }
+// // 文档是存储在集合中的单个对象。它可以与关系数据库表中的单个记录进行比较。
+// export type RxComponent = RxDocument<RxComponentType>;
+
+// // A collection stores documents of the same type.
+// // 存储相同类型的集合，继承RxCollection，可以操作这个集合
+// declare class RxComponentCollection extends RxCollection<RxComponentType> {
+//   pouch: any;
+// }
+// /**
+//  * RxDatabase-Object包含您的集合并处理更改事件的同步。
+//  */
+// export class RxComponentsDatabase extends RxDatabase {
+//   component?: RxComponentCollection;
+// }
+// // 合并导出
+// declare let _default: {
+//   RxComponentCollection,
+//   RxComponentsDatabase
+// };
+
+// export default _default;
