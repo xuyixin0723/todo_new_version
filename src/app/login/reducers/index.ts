@@ -6,10 +6,15 @@ export interface AuthState {
     auth: fromAuth.State;
 }
 // 使用ActionReducerMap,防止后面的人追加的时候不知道如何追加
-export const reducers: ActionReducerMap<AuthState> = {
-    auth: fromAuth.authReducer
-};
+// export const reducers: ActionReducerMap<AuthState> = {
+//     auth: fromAuth.authReducer
+// };
 
+export function getReducers(): ActionReducerMap<AuthState> {
+    return {
+        auth: fromAuth.authReducer
+    };
+}
 // 注册一个状态库名字为auth,这个名字是在modul里面注册的名字,需要一样
 export const selectAuthState = createFeatureSelector<AuthState>('auth');
 

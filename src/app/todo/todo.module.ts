@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, InjectionToken } from '@angular/core';
 
 import { SharedModule } from './../shared/shared.module';
 import { HttpModule } from '@angular/http';
@@ -12,16 +12,19 @@ import { TodoService } from './todo.service';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 
-import { reducers } from './reducers';
-import { StoreModule } from '@ngrx/store';
+import { StoreModule, ActionReducerMap } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { TodoEffects } from './effects/todo.effects';
+
+import * as fromFeature from './reducers';
+
+export const FEATURE_REDUCER_TOKEN = new InjectionToken<ActionReducerMap<fromFeature.TodosState>>('Feature Reducers');
 @NgModule({
   imports: [
     SharedModule,
     HttpModule,
     TodoRoutingModule,
-    StoreModule.forFeature('todos', reducers),
+    StoreModule.forFeature('todosState', FEATURE_REDUCER_TOKEN),
     EffectsModule.forFeature([TodoEffects])
   ],
   declarations: [
@@ -35,7 +38,8 @@ import { TodoEffects } from './effects/todo.effects';
   //   { provide: 'todoService', useClass: TodoService }
   // ],
   providers: [
-    TodoService
+    TodoService,
+    { provide: FEATURE_REDUCER_TOKEN, useFactory: fromFeature.getReducers}
   ]
 })
 export class TodoModule { }

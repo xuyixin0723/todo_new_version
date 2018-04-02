@@ -2,6 +2,8 @@
 import { createSelector, createFeatureSelector, ActionReducerMap } from '@ngrx/store';
 import * as fromTodos from './todo.reducer';
 import * as fromFilter from './todo.filter.reducer';
+import { TodoRequestType } from '../actions/todo.action';
+import { VisibilityFilters } from '../actions/todo.filter.action';
 
 // 将此模块的所有state进行了合并,统一为一个State
 export interface TodosState {
@@ -12,14 +14,43 @@ export interface TodosState {
 export interface State {
     todoState: TodosState;
 }
-// 这个地方报的错误,是可以正常使用的
-export const reducers: ActionReducerMap<TodosState> = {
-    todos: fromTodos.todoReducer,
-    todoFilter: fromFilter.todoFilterReducer
-};
+export const TODOS = 'todos';
+export type TODOS = 'todos';
+export const TODOFILTER = 'todoFilter';
+export type TODOFILTER = 'todoFilter';
+const todoRequestType: TodoRequestType = null;
+const visibilityFilters: VisibilityFilters = null;
+
+export function getReducers(): ActionReducerMap<TodosState> {
+    return {
+        todos: fromTodos.todoReducer,
+        todoFilter: fromFilter.todoFilterReducer
+    };
+}
+
+export function createNamedWrapperReducer<T>(
+    reducerFunction: ( ( state, action ) => T ), reducerName: string ): ( ( state, action ) => T ) {
+    return ( state, action ) => {
+        const { name } = action;
+        const isInitializationCall = state === undefined;
+        if ( name !== reducerName && !isInitializationCall ) {
+            return state;
+        }
+
+        return reducerFunction( state, action );
+    };
+}
 
 // 注册一个状态库名字为auth,这个名字是在modul里面注册的名字,需要一样
-export const selectTodosState = createFeatureSelector<TodosState>('todos');
+export const selectTodosState = createFeatureSelector<TodosState>('todosState');
+
+
+// const initialTodosState = fromTodos.initialState;
+// const initialFilterState = fromFilter.initialState;
+
+// export function getInitialState() {
+//     return {...initialTodosState, ...initialFilterState};
+// }
 
 export const selectTodoStatusState = createSelector(
     selectTodosState,

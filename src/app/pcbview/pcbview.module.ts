@@ -1,9 +1,9 @@
 import { SharedModule } from './../shared/shared.module';
-import { NgModule } from '@angular/core';
+import { NgModule, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 
-import { StoreModule } from '@ngrx/store';
+import { StoreModule, ActionReducerMap } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DBModule } from '@ngrx/db';
 
@@ -11,7 +11,6 @@ import { PcbviewComponent } from './pcbview.component';
 import { PcbviewRoutingModule } from './pcbview-routing.module';
 import { PcbviewService } from './pcbview.service';
 
-import { reducers } from './reducers';
 import { PcbviewEffects } from './effects/pcbview.effects';
 import { HttpClientModule } from '@angular/common/http';
 // import { schema } from './models/componentsDB';
@@ -19,6 +18,8 @@ import { NotifyService } from './service/notify';
 import { NgForageModule, NgForageConfig, NgForageOptions } from '@ngforage/ngforage-ng5';
 import { DatabaseService } from './service/database.service';
 
+import * as fromFeature from './reducers';
+export const FEATURE_REDUCER_TOKEN = new InjectionToken<ActionReducerMap<fromFeature.ComponentState>>('Feature Reducers');
 @NgModule({
   imports: [
     CommonModule,
@@ -26,7 +27,7 @@ import { DatabaseService } from './service/database.service';
     HttpModule,
     SharedModule,
     PcbviewRoutingModule,
-    StoreModule.forFeature('components', reducers),
+    StoreModule.forFeature('components', FEATURE_REDUCER_TOKEN),
     EffectsModule.forFeature([PcbviewEffects]),
     NgForageModule // 将ngforage模块导入
   ],
@@ -36,7 +37,8 @@ import { DatabaseService } from './service/database.service';
   providers: [
     PcbviewService,
     DatabaseService,
-    NotifyService
+    NotifyService,
+    { provide: FEATURE_REDUCER_TOKEN, useFactory: fromFeature.getReducers}
   ]
 })
 export class PcbviewModule {

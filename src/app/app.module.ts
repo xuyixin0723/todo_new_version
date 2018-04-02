@@ -43,7 +43,7 @@ import { NgForageModule } from '@ngforage/ngforage-ng5';
     PcbviewModule,
     BrowserAnimationsModule, // 没有这个动画，下拉菜单下不来
     MaterialModule,
-    StoreModule.forRoot(fromRoot.reducers, {}), // 这里必须引入,否则将会出错
+    StoreModule.forRoot(fromRoot.reducers), // 这里必须引入,否则将会出错
     EffectsModule.forRoot([RouterEffects]),
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'

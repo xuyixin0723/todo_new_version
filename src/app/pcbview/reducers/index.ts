@@ -5,9 +5,14 @@ export interface ComponentState {
     components: fromPcbview.State;
 }
 
-export const reducers: ActionReducerMap<ComponentState> = {
-    components: fromPcbview.pcbviewReducer
-};
+// export const reducers: ActionReducerMap<ComponentState> = {
+//     components: fromPcbview.pcbviewReducer
+// };
+export function getReducers(): ActionReducerMap<ComponentState> {
+    return {
+        components: fromPcbview.pcbviewReducer
+    };
+}
 // createFeatureSelector创建特性的selector,并起一个名字
 // selector介绍
 // https://github.com/ngrx/platform/blob/master/docs/store/selectors.md
