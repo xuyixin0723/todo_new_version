@@ -14,6 +14,7 @@ import * as fromRoot from '../reducers';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/mapTo';
 import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/distinctUntilChanged';
 @Injectable()
 export class TodoService {
 
@@ -38,16 +39,18 @@ export class TodoService {
   }
   getTodosState(route: ActivatedRoute): Observable<Todo[]> {
     const fetchData$ = this.getTodos()
-    .flatMap( todos => {
-      this.store$.dispatch({
-        type: TodoRequestType.FETCH_FROM_API,
-        payload: todos
-      });
-      return this.store$.select(fromRoot.fromTodos.getTodos);
-    })
+      .map(todos => {
+        this.store$.dispatch({
+          type: TodoRequestType.FETCH_FROM_API,
+          payload: todos
+        });
+      })
+      .flatMap( () => {
+        return this.store$.select(fromRoot.fromTodos.getTodos);
+      })
     // startWidth操作符为发出给定的第一个值
     // BehaviorSubject当然也可以做到,这里从一个空的数组开始,
-    .startWith([]);
+      .startWith([]);
 
     // pluck操作符是获取对象的属性值,比如:
     /* const source = Rx.Observable.from([
@@ -65,7 +68,8 @@ export class TodoService {
       this.store$.dispatch({type: filter});
     })
     // select(...)为选择返回什么样的Observable数据
-    .flatMap(_ => this.store$.select(fromRoot.fromTodos.getTodoFilter));
+    .flatMap(_ => this.store$.select(fromRoot.fromTodos.getTodoFilter))
+    .distinctUntilChanged(filter => filter); // 去除重复数据
 
     // 这里只有当fetchData$和filterData$都至少有一个值之后才会触发
     // 这里的第三个参数是projection 函数,projection的参数是所有Observable
@@ -74,7 +78,8 @@ export class TodoService {
       fetchData$,
       filterData$,
       (todos: Todo[], filter: any) => {
-        return todos.filter(filter);
+          console.log('3.执行 combineLatest');
+          return todos.filter(filter);
       }
     );
   }

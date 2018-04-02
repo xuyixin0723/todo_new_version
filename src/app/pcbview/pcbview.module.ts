@@ -47,10 +47,8 @@ export class PcbviewModule {
     conf.description = 'Database used for offline storage of components.';
     // Set the store name (e.g. in IndexedDB this is the dataStore)
     conf.storeName = 'Components_store';
-    // Set default cache time to 5 minutes
-    conf.cacheTime = 300000;
     // Set driver to local storage
-    conf.driver = NgForageConfig.DRIVER_LOCALSTORAGE;
+    // conf.driver = NgForageConfig.DRIVER_LOCALSTORAGE;
     /**
      * Set the driver to indexed db if available,
      * falling back to websql
@@ -65,7 +63,7 @@ export class PcbviewModule {
     // Set websql database size
     conf.size = 1024 * 1024 * 4;
     // Set DB version. Currently unused.
-    // conf.version = 1.0;
+    conf.version = 2.0;
     // const bulk: NgForageOptions = {
     //   version: 1,
     //   name: 'newDatabase'

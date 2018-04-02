@@ -14,15 +14,15 @@ export const todoFilterReducer = (state = initialState, action: Action) => {
     switch (action.type) {
       case VisibilityFilters.SHOW_ALL:
         return {
-          todoFilter: todo => todo
+          todoFilter: (todo: Todo) => todo
         };
       case VisibilityFilters.SHOW_ACTIVE:
         return {
-          todoFilter: todo => !todo.completed
+          todoFilter: (todo: Todo) => !todo.completed
         };
       case VisibilityFilters.SHOW_COMPLETED:
         return {
-          todoFilter: todo => todo.completed
+          todoFilter: (todo: Todo) => todo.completed
         };
       default:
         return state;

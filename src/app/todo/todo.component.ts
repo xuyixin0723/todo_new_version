@@ -28,9 +28,11 @@ export class TodoComponent implements OnInit {
     private service: TodoService,
     private route: ActivatedRoute,
     private store$: Store<fromRoot.AppState>) {
+      console.log('1.执行todo构造函数');
       this.todos = this.service.getTodosState(route);
     }
     ngOnInit() {
+      console.log('1.执行todo ngOnInit');
     }
 
     addTodo(desc: string): void {

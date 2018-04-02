@@ -10,7 +10,9 @@ export class TodoListComponent {
   _todos: Todo[] = [];
   @Input()
   set todos(todos: Todo[]){
-    this._todos = [...todos];
+    if (  0 !== todos.length ) {
+      this._todos = [...todos];
+    }
   }
   get todos() {
     return this._todos;
