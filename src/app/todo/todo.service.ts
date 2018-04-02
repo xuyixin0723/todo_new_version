@@ -18,7 +18,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 @Injectable()
 export class TodoService {
 
-  private api_url = 'http://localhost:3000/todos';
+  private api_url = 'http://192.168.2.75:3000/todos';
   private headers = new Headers({ 'Content-Type': 'application/json' });
   private userId$: Observable<number>;
 

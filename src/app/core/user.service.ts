@@ -11,7 +11,7 @@ import { User } from '../login/models/auth';
 @Injectable()
 export class UserService {
 
-  private api_url = 'http://localhost:3000/users';
+  private api_url = 'http://192.168.2.75:3000/users';
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http) { }
