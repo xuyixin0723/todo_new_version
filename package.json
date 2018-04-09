@@ -8,7 +8,12 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-i18n:zh": "ng build --prod --outputPath=dist/zh --i18nFile=src/locale/messages.zh.xlf --i18nFormat=xlf --locale=zh-Hans",
+    "build-i18n:en": "ng build --prod --outputPath=dist/en --i18nFile=src/locale/messages.en.xlf --i18nFormat=xlf --locale=en-US",
+    "build-i18n": "npm run build-i18n:zh; npm run build-i18n:en",
+    "start:docker": "docker run --rm --name i18n -v $PWD/dist:/usr/share/nginx/html:ro -v $PWD/default.conf:/etc/nginx/conf.d/default.conf:ro -p 8082:80 -d nginx",
+    "restart:docker": "docker restart i18n"
   },
   "private": true,
   "dependencies": {
@@ -37,7 +42,7 @@
     "d3": "^5.0.0",
     "hammerjs": "^2.0.8",
     "rxdb": "^7.4.2",
-    "rxjs": "^5.5.2",
+    "rxjs": "^5.5.8",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
