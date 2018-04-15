@@ -26,7 +26,7 @@
              required>
       <div *ngIf="passwordRef.errors?.required">this is required</div>
     </mat-form-field>
-    <button mat-raised-button
+    <button i18n="site header|An introduction header for this sample" mat-raised-button
             color="primary"
             type="submit"
             [@loginState]="loginBtnState"
@@ -34,7 +34,7 @@
             (mouseleave)="toggleLoginState(false)">
       Login
     </button>
-    <button mat-raised-button
+    <button i18n mat-raised-button
             color="accent"
             (click)="register()">
       Register

@@ -6,27 +6,33 @@
         <source>
                     Login
                 </source>
-        <target>Login</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.ts</context>
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3472e07c2c71430fca2252e24011ba52e7425203" datatype="html">
+      <trans-unit id="cfc2f436ec2beffb042e7511a73c89c372e86a6c" datatype="html">
+        <source>Register</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/register-dialog/register-dialog.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ec574f30f4613ec02994c13a9e8e5a9df77c25a0" datatype="html">
         <source>
       Login
     </source>
-    <target>Login</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/login/login.component.ts</context>
           <context context-type="linenumber">34</context>
         </context-group>
+        <note priority="1" from="description">An introduction header for this sample</note>
+        <note priority="1" from="meaning">site header</note>
       </trans-unit>
       <trans-unit id="fc51ca75666e38f567581ee013fb7ab64bc31533" datatype="html">
         <source>
       Register
     </source>
-    <target>Register</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/login/login.component.ts</context>
           <context context-type="linenumber">39</context>

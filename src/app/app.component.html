@@ -21,7 +21,7 @@
                 <a routerLink="profile">{{auth.user.username}}</a>
             </nav>
             <nav class="item">
-                <a *ngIf="auth?.user?.username === null"
+                <a i18n *ngIf="auth?.user?.username === null"
                    (click)="login()">
                     Login
                 </a>
